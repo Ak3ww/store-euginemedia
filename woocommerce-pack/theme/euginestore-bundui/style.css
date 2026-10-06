@@ -1,15 +1,18 @@
 /*
 Theme Name: EugineStore BundUI Theme
 Theme URI: https://euginemediagroup.com
-Description: Modern E-Commerce Child Theme inspired by BundUI and Shadcn UI with Hallmark Oceanic Blue branding for EugineStore.
+Description: Pure BundUI & Shadcn UI E-Commerce Theme with Oceanic Blue Design System for EugineStore.
 Author: Eugine Media Group
 Author URI: https://euginemediagroup.com
 Template: storefront
-Version: 1.0.0
+Version: 1.1.0
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+/* ==========================================================================
+   1. BUNDUI DESIGN TOKENS (Shadcn UI & Oceanic Blue)
+   ========================================================================== */
 :root {
     --color-primary: #002c60;
     --color-primary-hover: #001f44;
@@ -17,10 +20,25 @@ Version: 1.0.0
     --color-bg: #f8fafc;
     --color-card: #ffffff;
     --color-border: #e2e8f0;
+    --color-border-hover: #cbd5e1;
     --color-text-main: #0f172a;
+    --color-text-secondary: #475569;
     --color-text-muted: #64748b;
+    --color-success: #10b981;
+    --color-success-bg: #ecfdf5;
+    --color-danger: #ef4444;
+    --color-danger-bg: #fef2f2;
+    --radius-sm: 6px;
     --radius-md: 10px;
     --radius-lg: 14px;
+    --radius-full: 9999px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+    --shadow-hover: 0 10px 25px -5px rgba(0, 44, 96, 0.08), 0 8px 10px -6px rgba(0, 44, 96, 0.04);
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
@@ -28,37 +46,146 @@ body {
     background-color: var(--color-bg) !important;
     color: var(--color-text-main) !important;
     -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
 }
 
-/* Header & Navigation Styling */
+/* ==========================================================================
+   2. HEADER & NAVIGATION (Clean Shadcn Header)
+   ========================================================================== */
 .site-header {
     background: #ffffff !important;
     border-bottom: 1px solid var(--color-border) !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
-    padding: 16px 0 !important;
+    box-shadow: var(--shadow-sm) !important;
+    padding: 14px 0 !important;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(8px);
 }
 
 .site-branding .site-title a {
     color: var(--color-primary) !important;
-    font-weight: 700 !important;
+    font-weight: 800 !important;
     font-size: 22px !important;
-    letter-spacing: -0.02em !important;
+    letter-spacing: -0.03em !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.site-branding .site-description {
+    color: var(--color-text-muted) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    margin-top: 2px;
 }
 
 .main-navigation ul.menu > li > a {
-    color: #334155 !important;
+    color: var(--color-text-secondary) !important;
     font-weight: 500 !important;
     font-size: 14px !important;
-    transition: color 0.15s ease;
+    padding: 8px 14px !important;
+    border-radius: var(--radius-sm);
+    transition: all 0.15s ease;
 }
 
-.main-navigation ul.menu > li > a:hover {
+.main-navigation ul.menu > li > a:hover,
+.main-navigation ul.menu > li.current-menu-item > a {
     color: var(--color-primary) !important;
+    background: #f1f5f9;
 }
 
-/* BundUI Product Card Grid */
+.site-header-cart .cart-contents {
+    background: #f1f5f9 !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: var(--radius-full) !important;
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: var(--color-primary) !important;
+    transition: all 0.15s ease;
+}
+
+.site-header-cart .cart-contents:hover {
+    background: #e2e8f0 !important;
+    border-color: var(--color-border-hover) !important;
+}
+
+.site-header-cart .count {
+    background: var(--color-primary) !important;
+    color: #ffffff !important;
+    border-radius: var(--radius-full) !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 2px 7px !important;
+    margin-left: 6px !important;
+}
+
+/* ==========================================================================
+   3. BUNDUI HERO & SHOP BANNER
+   ========================================================================== */
+.euginestore-hero-banner {
+    background: linear-gradient(135deg, #002c60 0%, #1b437c 100%);
+    border-radius: var(--radius-lg);
+    padding: 36px 32px;
+    color: #ffffff;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 20px rgba(0, 44, 96, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.euginestore-hero-banner::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.euginestore-hero-banner .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    margin-bottom: 14px;
+    backdrop-filter: blur(4px);
+}
+
+.euginestore-hero-banner h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin: 0 0 8px 0;
+    color: #ffffff !important;
+}
+
+.euginestore-hero-banner p {
+    font-size: 14px;
+    color: #cbd5e1;
+    max-width: 600px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ==========================================================================
+   4. BUNDUI PRODUCT CARD GRID (Pure Shadcn Card Aesthetic)
+   ========================================================================== */
 ul.products {
-    margin: 0 -8px !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 20px !important;
+    margin: 0 !important;
     padding: 0 !important;
 }
 
@@ -67,22 +194,35 @@ ul.products li.product {
     border: 1px solid var(--color-border) !important;
     border-radius: var(--radius-md) !important;
     overflow: hidden !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+    box-shadow: var(--shadow-card) !important;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    padding: 14px !important;
-    margin-bottom: 20px !important;
-    text-align: left !important;
+    padding: 16px !important;
+    margin: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    position: relative;
 }
 
 ul.products li.product:hover {
-    border-color: #cbd5e1 !important;
-    box-shadow: 0 8px 20px -4px rgba(0, 44, 96, 0.08) !important;
-    transform: translateY(-2px);
+    border-color: var(--color-border-hover) !important;
+    box-shadow: var(--shadow-hover) !important;
+    transform: translateY(-3px);
+}
+
+ul.products li.product a.woocommerce-LoopProduct-link {
+    display: block;
+    text-decoration: none !important;
 }
 
 ul.products li.product img {
     border-radius: 8px !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 14px !important;
+    width: 100% !important;
+    height: 190px !important;
+    object-fit: cover !important;
+    background-color: #f1f5f9;
     transition: transform 0.3s ease;
 }
 
@@ -92,90 +232,417 @@ ul.products li.product:hover img {
 
 ul.products li.product .woocommerce-loop-product__title {
     color: var(--color-text-main) !important;
-    font-size: 15px !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
     line-height: 1.4 !important;
-    margin-bottom: 6px !important;
-    min-height: 42px;
+    margin: 0 0 8px 0 !important;
+    min-height: 40px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 ul.products li.product .price {
     color: var(--color-primary) !important;
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    margin-bottom: 12px !important;
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    margin: 4px 0 14px 0 !important;
     display: block !important;
+    letter-spacing: -0.02em;
 }
 
 ul.products li.product .price del {
     color: var(--color-text-muted) !important;
-    font-size: 13px !important;
+    font-size: 12px !important;
     font-weight: 400 !important;
+    margin-right: 4px;
 }
 
 ul.products li.product .price ins {
     text-decoration: none !important;
-    font-weight: 700 !important;
+    font-weight: 800 !important;
 }
 
-/* BundUI Buttons */
+/* Badge Diskon (On Sale) */
+.woocommerce span.onsale {
+    background-color: var(--color-danger) !important;
+    color: #ffffff !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    padding: 4px 8px !important;
+    min-height: unset !important;
+    min-width: unset !important;
+    line-height: 1 !important;
+    border-radius: var(--radius-sm) !important;
+    top: 12px !important;
+    left: 12px !important;
+    right: auto !important;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3) !important;
+}
+
+/* ==========================================================================
+   5. BUNDUI / SHADCN BUTTONS
+   ========================================================================== */
 .button, 
 button.button, 
 input.button, 
 #respond input#submit, 
-.woocommerce a.button.add_to_cart_button {
+.woocommerce a.button.add_to_cart_button,
+.woocommerce button.button.alt,
+.woocommerce input.button.alt {
     background-color: var(--color-primary) !important;
     color: #ffffff !important;
     font-weight: 600 !important;
     font-size: 13px !important;
     border-radius: 8px !important;
-    padding: 10px 16px !important;
-    border: none !important;
-    box-shadow: 0 1px 2px rgba(0, 44, 96, 0.12) !important;
+    padding: 10px 18px !important;
+    border: 1px solid var(--color-primary) !important;
+    box-shadow: var(--shadow-sm) !important;
     transition: all 0.15s ease !important;
     width: 100% !important;
     text-align: center !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
 }
 
 .button:hover, 
 button.button:hover, 
 input.button:hover, 
 #respond input#submit:hover, 
-.woocommerce a.button.add_to_cart_button:hover {
+.woocommerce a.button.add_to_cart_button:hover,
+.woocommerce button.button.alt:hover,
+.woocommerce input.button.alt:hover {
     background-color: var(--color-primary-hover) !important;
-    box-shadow: 0 4px 10px rgba(0, 44, 96, 0.2) !important;
+    border-color: var(--color-primary-hover) !important;
+    box-shadow: 0 4px 12px rgba(0, 44, 96, 0.2) !important;
+    transform: translateY(-1px);
 }
 
-/* Badge Diskon & Terlaris */
-.woocommerce span.onsale {
-    background-color: #ef4444 !important;
-    color: #ffffff !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
+/* Secondary Button Style */
+.button.secondary,
+.woocommerce a.button.secondary {
+    background-color: #ffffff !important;
+    color: var(--color-text-main) !important;
+    border: 1px solid var(--color-border) !important;
+}
+
+.button.secondary:hover,
+.woocommerce a.button.secondary:hover {
+    background-color: #f1f5f9 !important;
+    border-color: var(--color-border-hover) !important;
+}
+
+/* ==========================================================================
+   6. SHADCN INPUT CONTROLS & FORMS
+   ========================================================================== */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+textarea,
+select {
+    background-color: #ffffff !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    color: var(--color-text-main) !important;
+    outline: none !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+    width: 100% !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(0, 44, 96, 0.1) !important;
+}
+
+/* ==========================================================================
+   7. SINGLE PRODUCT PAGE (Clean Modern Layout)
+   ========================================================================== */
+.single-product div.product {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 40px;
+}
+
+.single-product .product_title {
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    color: var(--color-text-main) !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 8px !important;
+}
+
+.single-product .woocommerce-Price-amount {
+    color: var(--color-primary) !important;
+    font-weight: 800 !important;
+    font-size: 24px !important;
+}
+
+.single-product .woocommerce-product-details__short-description {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 16px 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    padding: 16px 0;
+}
+
+.single-product .quantity input.qty {
+    border: 1px solid var(--color-border) !important;
+    border-radius: 8px !important;
+    height: 44px !important;
+    width: 60px !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+}
+
+.single-product form.cart {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.single-product form.cart button.single_add_to_cart_button {
+    height: 44px;
+    width: auto !important;
+    flex-grow: 1;
+}
+
+/* Tabs Informasi Produk */
+.woocommerce-tabs ul.tabs {
+    border-bottom: 1px solid var(--color-border) !important;
+    padding: 0 !important;
+    display: flex !important;
+    gap: 8px !important;
+}
+
+.woocommerce-tabs ul.tabs li {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.woocommerce-tabs ul.tabs li a {
+    color: var(--color-text-muted) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    padding: 10px 18px !important;
+    display: inline-block !important;
+    border-bottom: 2px solid transparent !important;
+    transition: all 0.15s ease !important;
+}
+
+.woocommerce-tabs ul.tabs li.active a {
+    color: var(--color-primary) !important;
+    border-bottom-color: var(--color-primary) !important;
+}
+
+.woocommerce-tabs .panel {
+    padding: 24px 0 !important;
+    color: var(--color-text-secondary) !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+}
+
+/* ==========================================================================
+   8. CART & CHECKOUT (BundUI Clean Tables & Summary)
+   ========================================================================== */
+.woocommerce-cart table.cart,
+.woocommerce-checkout table.shop_table {
+    border: 1px solid var(--color-border) !important;
+    border-radius: var(--radius-md) !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+    box-shadow: var(--shadow-sm) !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+}
+
+.woocommerce-cart table.cart th,
+.woocommerce-checkout table.shop_table th {
+    background: #f8fafc !important;
+    color: var(--color-text-muted) !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
     text-transform: uppercase !important;
-    padding: 4px 8px !important;
-    min-height: unset !important;
-    min-width: unset !important;
-    line-height: 1 !important;
-    border-radius: 6px !important;
-    top: 12px !important;
-    left: 12px !important;
-    right: auto !important;
+    letter-spacing: 0.05em !important;
+    padding: 14px 18px !important;
+    border-bottom: 1px solid var(--color-border) !important;
 }
 
-/* Mobile Responsive Grid 2 Kolom ala Shopee */
-@media (max-width: 768px) {
+.woocommerce-cart table.cart td,
+.woocommerce-checkout table.shop_table td {
+    padding: 16px 18px !important;
+    border-bottom: 1px solid var(--color-border) !important;
+    color: var(--color-text-main) !important;
+    font-size: 14px !important;
+}
+
+.cart-collaterals .cart_totals {
+    background: #ffffff !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 24px !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.cart-collaterals .cart_totals h2 {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: var(--color-primary) !important;
+    margin-bottom: 16px !important;
+}
+
+.woocommerce-checkout {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
+}
+
+.woocommerce-checkout h3 {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 10px;
+}
+
+/* ==========================================================================
+   9. SHADCN ALERT / NOTICES (Clean Status Banners)
+   ========================================================================== */
+.woocommerce-message,
+.woocommerce-error,
+.woocommerce-info {
+    border-radius: var(--radius-md) !important;
+    padding: 14px 20px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    margin-bottom: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.woocommerce-message {
+    background-color: var(--color-success-bg) !important;
+    border: 1px solid #a7f3d0 !important;
+    color: #065f46 !important;
+}
+
+.woocommerce-error {
+    background-color: var(--color-danger-bg) !important;
+    border: 1px solid #fecaca !important;
+    color: #991b1b !important;
+}
+
+.woocommerce-info {
+    background-color: #f0f7ff !important;
+    border: 1px solid #bae6fd !important;
+    color: #0369a1 !important;
+}
+
+/* ==========================================================================
+   10. PAGINATION (Clean Shadcn Stepper)
+   ========================================================================== */
+.woocommerce-pagination ul {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    border: none !important;
+    padding: 24px 0 !important;
+}
+
+.woocommerce-pagination ul li {
+    border: none !important;
+    background: transparent !important;
+}
+
+.woocommerce-pagination ul li a,
+.woocommerce-pagination ul li span {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 38px !important;
+    height: 38px !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--color-border) !important;
+    background: #ffffff !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: var(--color-text-main) !important;
+    text-decoration: none !important;
+    transition: all 0.15s ease !important;
+}
+
+.woocommerce-pagination ul li a:hover {
+    background: #f1f5f9 !important;
+    border-color: var(--color-border-hover) !important;
+}
+
+.woocommerce-pagination ul li span.current {
+    background: var(--color-primary) !important;
+    color: #ffffff !important;
+    border-color: var(--color-primary) !important;
+}
+
+/* ==========================================================================
+   11. MOBILE RESPONSIVE (Grid 2 Kolom ala Modern Mobile Store)
+   ========================================================================== */
+@media (max-width: 1024px) {
     ul.products {
-        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .site-header {
+        padding: 10px 0 !important;
+    }
+
+    .euginestore-hero-banner {
+        padding: 24px 20px;
+        margin-bottom: 20px;
+    }
+
+    .euginestore-hero-banner h1 {
+        font-size: 20px;
+    }
+
+    ul.products {
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
-        margin: 0 !important;
+        gap: 12px !important;
     }
 
     ul.products li.product {
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 10px !important;
+        padding: 12px !important;
+    }
+
+    ul.products li.product img {
+        height: 140px !important;
+        margin-bottom: 10px !important;
     }
 
     ul.products li.product .woocommerce-loop-product__title {
@@ -184,40 +651,32 @@ input.button:hover,
     }
 
     ul.products li.product .price {
-        font-size: 14px !important;
+        font-size: 15px !important;
+        margin-bottom: 10px !important;
     }
 
     .button, .woocommerce a.button.add_to_cart_button {
         font-size: 12px !important;
         padding: 8px 10px !important;
     }
+
+    .single-product div.product,
+    .woocommerce-checkout {
+        padding: 16px;
+    }
 }
 
-/* Clean Checkout Form */
-.woocommerce-checkout {
-    background: #ffffff;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-}
-
-.woocommerce-checkout h3 {
-    color: var(--color-primary);
-    font-weight: 700;
-    font-size: 18px;
-    margin-bottom: 16px;
-}
-
-/* Floating WhatsApp Quick Consultation Button */
+/* ==========================================================================
+   12. FLOATING WHATSAPP BUTTON (Sales Consultation)
+   ========================================================================== */
 .eugine-floating-wa {
     position: fixed;
     bottom: 24px;
     right: 24px;
-    background: #10b981;
+    background: var(--color-success);
     color: #ffffff;
     padding: 12px 20px;
-    border-radius: 9999px;
+    border-radius: var(--radius-full);
     font-weight: 600;
     font-size: 14px;
     display: flex;
