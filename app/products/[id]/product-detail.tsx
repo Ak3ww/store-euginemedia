@@ -1,205 +1,244 @@
 "use client";
 
 import { useState } from "react";
-import { Star, Heart, Minus, Plus, Truck, RotateCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Star, ShoppingBag, ShieldCheck, Truck, ArrowLeft, ExternalLink, Minus, Plus } from "lucide-react";
+import Link from "next/link";
 import { useCartStore } from "@/stores/cartStore";
-import ProductCard from "@/components/ProductCard";
-import { Product } from "@/lib/schemas";
 
-type Props = { product: Product; relatedProducts: Product[] };
+interface ProductDetailPageProps {
+  product: {
+    id: string;
+    slug?: string;
+    name: string;
+    price: number;
+    originalPrice?: number | null;
+    imageUrl?: string | null;
+    image?: string;
+    images?: string[] | any;
+    description?: string;
+    weight?: number;
+    stock?: number;
+    specifications?: Record<string, string> | any;
+    shopeeUrl?: string | null;
+    tokopediaUrl?: string | null;
+    rating?: number;
+    reviews?: number;
+  };
+  relatedProducts?: any[];
+}
 
-export default function ProductDetailPage({ product, relatedProducts }: Props) {
-  const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedColor, setSelectedColor] = useState(product?.colors?.[0]);
+export default function ProductDetailPage({ product, relatedProducts = [] }: ProductDetailPageProps) {
   const [quantity, setQuantity] = useState(1);
   const addItem = useCartStore((state) => state.addItem);
+  const [selectedImage, setSelectedImage] = useState(0);
 
-  if (!product) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
-        Product not found
-      </div>
-    );
-  }
+  const imagesList = Array.isArray(product.images) && product.images.length > 0
+    ? product.images
+    : [product.imageUrl || product.image || "/images/placeholder-product.png"];
 
   const handleAddToCart = () => {
     addItem({
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.images?.[0] || product.image,
-      quantity: quantity
+      image: imagesList[0],
+      weight: product.weight || 500,
+      quantity,
     });
   };
 
-  const productImages = product.images || [
-    product.image,
-    product.image,
-    product.image,
-    product.image
-  ];
+  const discountPercent =
+    product.originalPrice && product.originalPrice > product.price
+      ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+      : null;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-        {/* Product Images */}
-        <div className="space-y-4">
-          <div className="aspect-square overflow-hidden rounded-xl bg-gray-100">
+      {/* Breadcrumb Navigation */}
+      <div className="mb-6 flex items-center space-x-2 text-xs font-semibold text-neutral-500 font-['Roboto'] uppercase tracking-wider">
+        <Link href="/" className="hover:text-neutral-900 transition-colors">Beranda</Link>
+        <span>/</span>
+        <Link href="/products" className="hover:text-neutral-900 transition-colors">Produk</Link>
+        <span>/</span>
+        <span className="text-neutral-900 truncate max-w-xs">{product.name}</span>
+      </div>
+
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+        {/* Left: Product Images Gallery */}
+        <div className="lg:col-span-6 space-y-4">
+          <div className="relative aspect-square w-full rounded-md border border-neutral-200 bg-white p-6 flex items-center justify-center overflow-hidden">
+            {discountPercent && (
+              <span className="absolute top-4 left-4 z-10 bg-[#ed1c24] text-white text-xs font-black px-2.5 py-1 rounded-xs uppercase tracking-wider font-['Archivo']">
+                Diskon {discountPercent}%
+              </span>
+            )}
             <img
-              src={productImages[selectedImage] || "/placeholder.svg"}
+              src={imagesList[selectedImage] || "/images/placeholder-product.png"}
               alt={product.name}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain transition-transform duration-300 hover:scale-105"
             />
           </div>
-          <div className="grid grid-cols-4 gap-4">
-            {productImages.map((image, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedImage(index)}
-                className={`aspect-square overflow-hidden rounded-lg border-2 bg-gray-100 ${
-                  selectedImage === index ? "border-primary" : "border-transparent"
-                }`}>
-                <img
-                  src={image || "/placeholder.svg"}
-                  alt={`${product.name} ${index + 1}`}
-                  className="h-full w-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
+
+          {imagesList.length > 1 && (
+            <div className="flex space-x-3 overflow-x-auto pb-2">
+              {imagesList.map((img: string, idx: number) => (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedImage(idx)}
+                  className={`h-20 w-20 shrink-0 rounded-md border p-1 bg-white transition-all ${
+                    selectedImage === idx ? "border-neutral-900 ring-2 ring-neutral-900" : "border-neutral-200 opacity-70 hover:opacity-100"
+                  }`}>
+                  <img src={img} alt={`${product.name}-${idx}`} className="h-full w-full object-contain" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Product Info */}
-        <div className="space-y-6">
+        {/* Right: Product Meta & Purchase Controls */}
+        <div className="lg:col-span-6 flex flex-col justify-between">
           <div>
-            <h1 className="mb-2 text-3xl font-bold text-gray-900">{product.name}</h1>
-            <div className="mb-4 flex items-center space-x-4">
-              <div className="flex items-center">
+            <span className="inline-block bg-neutral-100 text-neutral-800 text-[11px] font-bold px-2 py-0.5 rounded-sm font-['Archivo'] tracking-widest uppercase mb-2">
+              Official Store — Eugine Media Group
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 font-['Archivo'] leading-tight">
+              {product.name}
+            </h1>
+
+            {/* Rating & Stock */}
+            <div className="mt-3 flex items-center space-x-3">
+              <div className="flex items-center text-amber-500">
                 {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-5 w-5 ${
-                      i < Math.floor(product.rating)
-                        ? "fill-current text-yellow-400"
-                        : "text-gray-300"
-                    }`}
-                  />
+                  <Star key={i} className="h-4 w-4 fill-current text-amber-500" />
                 ))}
               </div>
-              <span className="text-muted-foreground text-sm">({product.reviews} reviews)</span>
+              <span className="text-xs font-semibold text-neutral-600 font-['Roboto']">
+                (4.9 • 38 Ulasan Terverifikasi)
+              </span>
+              <span className="text-neutral-300">|</span>
+              <span className="text-xs font-bold text-emerald-700 font-['Roboto']">
+                Stok Tersedia ({product.stock ?? 25} Unit)
+              </span>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-3xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
-              {product.originalPrice && (
-                <span className="text-xl text-gray-500 line-through">
-                  ${product.originalPrice.toFixed(2)}
+
+            {/* Price Box */}
+            <div className="mt-6 rounded-md bg-neutral-50 p-4 border border-neutral-200/80">
+              <div className="flex items-baseline space-x-3">
+                <span className="text-2xl sm:text-3xl font-black text-neutral-900 font-['Archivo']">
+                  Rp {product.price.toLocaleString("id-ID")}
                 </span>
-              )}
+                {product.originalPrice && product.originalPrice > product.price && (
+                  <span className="text-sm font-semibold text-neutral-400 line-through font-['Roboto']">
+                    Rp {product.originalPrice.toLocaleString("id-ID")}
+                  </span>
+                )}
+              </div>
+              <p className="mt-1 text-xs text-neutral-500 font-['Roboto']">
+                Estimasi berat pengiriman: {product.weight || 500} gram
+              </p>
             </div>
-          </div>
 
-          {product.description && (
-            <p className="text-muted-foreground leading-relaxed">{product.description}</p>
-          )}
-
-          {/* Color Selection */}
-          {product.colors && (
-            <div>
-              <h3 className="mb-3 font-semibold text-gray-900">Color</h3>
-              <div className="flex space-x-3">
-                {product.colors.map((color) => (
-                  <button
-                    key={color.name}
-                    onClick={() => setSelectedColor(color)}
-                    className={`h-10 w-10 rounded-full border-2 ${
-                      selectedColor?.name === color.name
-                        ? "border-primary border-4"
-                        : "border-gray-300"
-                    }`}
-                    style={{ backgroundColor: color.value }}
-                    title={color.name}
-                  />
-                ))}
+            {/* Quantity Selector */}
+            <div className="mt-6 flex items-center space-x-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-neutral-700 font-['Archivo']">
+                Jumlah:
+              </span>
+              <div className="flex items-center border border-neutral-300 rounded-[4px] bg-white">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="px-3 py-2 text-neutral-600 hover:text-neutral-900 transition-colors">
+                  <Minus className="h-3.5 w-3.5" />
+                </button>
+                <span className="px-3 text-sm font-bold font-['Archivo'] text-neutral-900">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="px-3 py-2 text-neutral-600 hover:text-neutral-900 transition-colors">
+                  <Plus className="h-3.5 w-3.5" />
+                </button>
               </div>
             </div>
-          )}
 
-          {/* Quantity */}
-          <div>
-            <h3 className="mb-3 font-semibold text-gray-900">Quantity</h3>
-            <div className="flex items-center space-x-3">
+            {/* Action Buttons (Cricket Weapon Style) */}
+            <div className="mt-6 space-y-3">
               <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50">
-                <Minus className="h-4 w-4" />
+                onClick={handleAddToCart}
+                className="w-full h-[48px] bg-neutral-900 text-white font-['Archivo'] font-bold text-sm tracking-wider uppercase rounded-[4px] flex items-center justify-center space-x-2 transition-all duration-200 hover:bg-[#ed1c24] active:scale-[0.99]">
+                <ShoppingBag className="h-4 w-4" />
+                <span>Tambah ke Keranjang Belanja</span>
               </button>
-              <span className="w-12 text-center font-semibold">{quantity}</span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50">
-                <Plus className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <Button onClick={handleAddToCart} className="flex-1" size="lg">
-              Add to Cart
-            </Button>
-            <Button variant="outline" size="lg">
-              <Heart className="mr-2 h-5 w-5" />
-              Add to Wishlist
-            </Button>
-          </div>
-
-          {/* Shipping Info */}
-          <div className="space-y-4 border-t pt-6">
-            <div className="flex items-center space-x-3">
-              <Truck className="text-primary h-5 w-5" />
-              <div>
-                <p className="font-medium">Free Shipping</p>
-                <p className="text-muted-foreground text-sm">On orders over $100</p>
+              {/* Multi-Marketplace Links */}
+              <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+                {product.tokopediaUrl && (
+                  <a
+                    href={product.tokopediaUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 h-10 border border-emerald-600 text-emerald-700 text-xs font-bold font-['Archivo'] uppercase rounded-[4px] flex items-center justify-center space-x-1.5 hover:bg-emerald-50 transition-colors">
+                    <span>Beli di Tokopedia</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
+                {product.shopeeUrl && (
+                  <a
+                    href={product.shopeeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 h-10 border border-orange-500 text-orange-600 text-xs font-bold font-['Archivo'] uppercase rounded-[4px] flex items-center justify-center space-x-1.5 hover:bg-orange-50 transition-colors">
+                    <span>Beli di Shopee</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <RotateCcw className="text-primary h-5 w-5" />
-              <div>
-                <p className="font-medium">30-Day Returns</p>
-                <p className="text-muted-foreground text-sm">Free returns within 30 days</p>
+
+            {/* Guarantees */}
+            <div className="mt-8 border-t border-neutral-200 pt-4 grid grid-cols-2 gap-4 text-xs text-neutral-600 font-['Roboto']">
+              <div className="flex items-center space-x-2">
+                <Truck className="h-4 w-4 text-neutral-800 shrink-0" />
+                <span>Pengiriman Cepat JNE, J&T, SiCepat</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
+                <span>Produk Original & Bergaransi Resmi</span>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Features */}
-          {product.features && (
-            <div className="border-t pt-6">
-              <h3 className="mb-3 font-semibold text-gray-900">Key Features</h3>
-              <ul className="space-y-2">
-                {product.features.map((feature, index) => (
-                  <li key={index} className="flex items-center space-x-2">
-                    <div className="bg-primary h-2 w-2 rounded-full" />
-                    <span className="text-muted-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
+      {/* Description & Technical Specifications */}
+      <div className="mt-14 border-t border-neutral-200 pt-8">
+        <h2 className="text-xl font-bold font-['Archivo'] uppercase tracking-tight text-neutral-900 mb-4">
+          Deskripsi & Spesifikasi Teknis
+        </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-7 prose prose-sm max-w-none text-neutral-700 font-['Roboto'] leading-relaxed whitespace-pre-line">
+            {product.description || "Perangkat berkualitas tinggi siap pakai untuk kebutuhan infrastruktur jaringan dan internet Anda."}
+          </div>
+
+          {/* Technical Specifications Table */}
+          {product.specifications && Object.keys(product.specifications).length > 0 && (
+            <div className="lg:col-span-5">
+              <div className="rounded-md border border-neutral-200 overflow-hidden bg-white">
+                <div className="bg-neutral-900 px-4 py-2.5">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-white font-['Archivo']">
+                    Spesifikasi Hardware
+                  </h3>
+                </div>
+                <div className="divide-y divide-neutral-100 text-xs font-['Roboto']">
+                  {Object.entries(product.specifications).map(([key, val]: [string, any]) => (
+                    <div key={key} className="flex px-4 py-2.5">
+                      <span className="w-1/2 font-semibold text-neutral-600 capitalize">{key.replace(/_/g, " ")}</span>
+                      <span className="w-1/2 text-neutral-900 font-medium">{String(val)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
         </div>
       </div>
-
-      {/* Related Products */}
-      {relatedProducts.length > 0 && (
-        <div className="mt-16">
-          <h2 className="mb-8 text-2xl font-bold text-gray-900">Related Products</h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {relatedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

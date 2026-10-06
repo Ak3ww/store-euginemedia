@@ -31,6 +31,7 @@ export const CartItemSchema = z.object({
   name: z.string(),
   price: z.number().positive(),
   image: z.string(),
+  weight: z.number().positive().default(500),
   quantity: z.number().min(1),
 })
 

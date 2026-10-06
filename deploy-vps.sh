@@ -101,19 +101,23 @@ npm run build
 log_success "Build aplikasi Next.js selesai dengan sukses."
 
 # ------------------------------------------------------------------------------
-# 6. Jalankan Proses PM2 di Port 3005
+# 6. Jalankan Proses PM2 di Port 3005 (Standalone Mode)
 # ------------------------------------------------------------------------------
-log_info "6/7 Mengonfigurasi PM2 (${PM2_NAME} port ${PORT})..."
+log_info "6/7 Mengonfigurasi PM2 (${PM2_NAME} port ${PORT} Standalone)..."
+
+# Salin direktori statis ke standalone folder jika belum ada
+cp -r "$APP_DIR/public" "$APP_DIR/.next/standalone/" 2>/dev/null || true
+cp -r "$APP_DIR/.next/static" "$APP_DIR/.next/standalone/.next/" 2>/dev/null || true
 
 if command -v pm2 &> /dev/null; then
     pm2 delete "$PM2_NAME" 2>/dev/null || true
-    pm2 start npm --name "$PM2_NAME" -- start -- -p "$PORT"
+    pm2 start "$APP_DIR/ecosystem.config.js"
     pm2 save
     log_success "Aplikasi berjalan di PM2: ${PM2_NAME} (Port ${PORT})."
 else
     log_warn "PM2 belum terpasang. Memasang pm2 global..."
     npm install -g pm2
-    pm2 start npm --name "$PM2_NAME" -- start -- -p "$PORT"
+    pm2 start "$APP_DIR/ecosystem.config.js"
     pm2 save
 fi
 

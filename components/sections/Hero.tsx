@@ -1,50 +1,60 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, ShieldCheck, Zap } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="bg-gradient-to-r from-gray-50 to-white">
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-          <div>
-            <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-6xl">
-              Discover Premium
-              <span className="text-primary block">Products</span>
+    <section className="relative overflow-hidden bg-neutral-900 text-white py-16 sm:py-24">
+      {/* Background Graphic Lines */}
+      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
+          {/* Left Text */}
+          <div className="lg:col-span-7">
+            <div className="inline-flex items-center space-x-2 rounded-[2px] bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-xs font-['Archivo'] mb-6">
+              <Zap className="h-3.5 w-3.5 text-[#ed1c24]" />
+              <span>Official Hardware & Merchandise Store</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight font-['Archivo'] leading-none">
+              PERANGKAT <span className="text-[#ed1c24]">JARINGAN</span> & FTTH RESMI
             </h1>
-            <p className="mb-8 max-w-lg text-xl text-gray-600">
-              Experience exceptional quality and modern design. Shop our curated collection of
-              premium products crafted for the modern lifestyle.
+
+            <p className="mt-5 text-sm sm:text-base text-neutral-300 font-['Roboto'] max-w-xl leading-relaxed">
+              Pusat belanja resmi kebutuhan Router MikroTik, OLT EPON/GPON, Modem ONT, Kabel Fiber Optic, dan Merchandise eksklusif dari Eugine Media Group. Jaminan 100% original bergaransi.
             </p>
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <Link href="/products">
-                <Button size="lg" className="w-full sm:w-auto">
-                  Shop Now
-                </Button>
+
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link
+                href="/products"
+                className="h-[48px] px-8 bg-[#ed1c24] text-white font-['Archivo'] font-bold text-xs uppercase tracking-wider rounded-[4px] flex items-center justify-center space-x-2 hover:bg-white hover:text-neutral-900 transition-all duration-200">
+                <span>Belanja Sekarang</span>
+                <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/about">
-                <Button variant="outline" size="lg" className="w-full bg-transparent sm:w-auto">
-                  Learn More
-                </Button>
+
+              <Link
+                href="/products?category=ftth"
+                className="h-[48px] px-6 border border-neutral-700 bg-neutral-800/80 text-white font-['Archivo'] font-bold text-xs uppercase tracking-wider rounded-[4px] flex items-center justify-center hover:border-white transition-all">
+                Katalog FTTH & OLT
               </Link>
             </div>
           </div>
-          <div className="relative">
-            <div className="aspect-square overflow-hidden rounded-2xl bg-gray-100">
+
+          {/* Right Banner Preview Image */}
+          <div className="lg:col-span-5 relative">
+            <div className="relative aspect-4/3 overflow-hidden rounded-md border border-neutral-800 bg-neutral-950 p-4 shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1511892549826-a48122d9b258?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="Hero Product"
-                className="h-full w-full object-cover"
+                src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=1170&auto=format&fit=crop"
+                alt="Perangkat Jaringan EugineStore"
+                className="h-full w-full object-cover rounded-[2px] opacity-90"
               />
-            </div>
-            <div className="absolute -bottom-6 -left-6 rounded-xl bg-white p-6 shadow-lg">
-              <div className="flex items-center space-x-4">
-                <div className="bg-primary flex h-12 w-12 items-center justify-center rounded-full">
-                  <span className="font-bold text-white">50%</span>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">Special Offer</p>
-                  <p className="text-sm text-gray-600">Limited time only</p>
-                </div>
+              <div className="absolute bottom-6 left-6 right-6 rounded-[4px] bg-neutral-900/95 border border-neutral-800 p-4 backdrop-blur-md">
+                <p className="text-xs font-bold uppercase tracking-wider font-['Archivo'] text-[#ed1c24]">
+                  Siap Kirim Se-Indonesia
+                </p>
+                <p className="text-sm font-black font-['Archivo'] text-white">
+                  Pengiriman Reguler & Cargo (JNE, J&T, SiCepat)
+                </p>
               </div>
             </div>
           </div>

@@ -8,6 +8,7 @@ interface CartStore {
   removeItem: (id: string) => void
   updateQuantity: (id: string, quantity: number) => void
   getTotal: () => number
+  getTotalWeight: () => number
   getItemCount: () => number
   clearCart: () => void
 }
@@ -50,6 +51,10 @@ export const useCartStore = create<CartStore>()(
 
       getTotal: () => {
         return get().items.reduce((total, item) => total + item.price * item.quantity, 0)
+      },
+
+      getTotalWeight: () => {
+        return get().items.reduce((total, item) => total + (item.weight || 500) * item.quantity, 0)
       },
 
       getItemCount: () => {

@@ -1,83 +1,122 @@
 "use client";
 
 import Link from "next/link";
-import { Star, Heart } from "lucide-react";
+import { Star, ShoppingBag, Eye } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
-import type { Product } from "@/lib/schemas";
-import { Button } from "@/components/ui/button";
 
 interface ProductCardProps {
-  product: Product;
+  product: {
+    id: string;
+    slug?: string;
+    name: string;
+    price: number;
+    originalPrice?: number | null;
+    imageUrl?: string | null;
+    image?: string;
+    rating?: number;
+    reviews?: number;
+    weight?: number;
+    description?: string;
+    badge?: string;
+    shopeeUrl?: string | null;
+    tokopediaUrl?: string | null;
+  };
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore((state) => state.addItem);
+
+  const displayImage = product.imageUrl || product.image || "/images/placeholder-product.png";
+  const productHref = `/products/${product.slug || product.id}`;
+  const ratingValue = product.rating || 5;
+  const reviewCount = product.reviews || 12;
 
   const handleAddToCart = () => {
     addItem({
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image,
-      quantity: 1
+      image: displayImage,
+      weight: product.weight || 500,
+      quantity: 1,
     });
   };
 
+  const discountPercent =
+    product.originalPrice && product.originalPrice > product.price
+      ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+      : null;
+
   return (
-    <div className="group overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:shadow-lg">
-      <div className="relative aspect-square overflow-hidden">
-        {product.badge && (
-          <span className="bg-primary absolute top-3 left-3 z-10 rounded-full px-2 py-1 text-xs font-medium text-white">
+    <div className="group relative flex flex-col justify-between bg-white border border-neutral-200/80 rounded-md overflow-hidden transition-all duration-300 hover:shadow-md hover:border-neutral-300">
+      {/* Product Image Media Container */}
+      <div className="relative aspect-square w-full overflow-hidden bg-neutral-50 p-4">
+        {/* Discount Badge */}
+        {discountPercent ? (
+          <span className="absolute top-3 left-3 z-10 bg-[#ed1c24] text-white text-[11px] font-bold px-2 py-0.5 rounded-sm tracking-wider uppercase font-['Archivo']">
+            -{discountPercent}%
+          </span>
+        ) : product.badge ? (
+          <span className="absolute top-3 left-3 z-10 bg-neutral-900 text-white text-[11px] font-bold px-2 py-0.5 rounded-sm tracking-wider uppercase font-['Archivo']">
             {product.badge}
           </span>
-        )}
-        <button className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white opacity-0 transition-opacity group-hover:opacity-100">
-          <Heart className="h-4 w-4 text-gray-600" />
-        </button>
-        <Link href={`/products/${product.id}`}>
+        ) : null}
+
+        <Link href={productHref} className="block h-full w-full">
           <img
-            src={product.image || "/placeholder.svg"}
+            src={displayImage}
             alt={product.name}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-contain object-center transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
           />
         </Link>
       </div>
 
-      <div className="p-4">
-        <Link href={`/products/${product.id}`}>
-          <h3 className="hover:text-primary mb-2 line-clamp-2 font-semibold text-gray-900 transition-colors">
-            {product.name}
-          </h3>
-        </Link>
-
-        <div className="mb-2 flex items-center">
-          <div className="flex items-center">
+      {/* Card Content Details */}
+      <div className="flex flex-1 flex-col p-4">
+        {/* Star Ratings */}
+        <div className="mb-1.5 flex items-center space-x-1">
+          <div className="flex items-center text-amber-500">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`h-4 w-4 ${
-                  i < Math.floor(product.rating) ? "fill-current text-yellow-400" : "text-gray-300"
+                className={`h-3.5 w-3.5 ${
+                  i < Math.floor(ratingValue) ? "fill-current text-amber-500" : "text-neutral-200 fill-neutral-200"
                 }`}
               />
             ))}
           </div>
-          <span className="ml-2 text-sm text-gray-600">({product.reviews})</span>
+          <span className="text-[12px] font-medium text-neutral-500">({reviewCount})</span>
         </div>
 
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="text-lg font-bold text-gray-900">${product.price.toFixed(2)}</span>
-            {product.originalPrice && (
-              <span className="text-sm text-gray-500 line-through">
-                ${product.originalPrice.toFixed(2)}
-              </span>
-            )}
-          </div>
+        {/* Product Title */}
+        <Link href={productHref} className="mb-2">
+          <h3 className="line-clamp-2 text-[14px] font-bold text-neutral-900 leading-snug group-hover:text-[#ed1c24] transition-colors font-['Archivo']">
+            {product.name}
+          </h3>
+        </Link>
+
+        {/* Price Row (Cricket-Weapon Strikethrough & Big Bold Price) */}
+        <div className="mt-auto pt-2 flex items-baseline space-x-2">
+          <span className="text-[16px] sm:text-[18px] font-extrabold text-neutral-900 font-['Archivo']">
+            Rp {product.price.toLocaleString("id-ID")}
+          </span>
+          {product.originalPrice && product.originalPrice > product.price && (
+            <span className="text-[12px] font-medium text-neutral-400 line-through">
+              Rp {product.originalPrice.toLocaleString("id-ID")}
+            </span>
+          )}
         </div>
 
-        <Button onClick={handleAddToCart} className="w-full" size="sm">
-          Add to Cart
-        </Button>
+        {/* Cricket Weapon Signature Action Button */}
+        <div className="mt-3.5">
+          <button
+            onClick={handleAddToCart}
+            className="w-full h-[42px] bg-neutral-900 text-white font-['Archivo'] font-bold text-[13px] tracking-wide rounded-[4px] uppercase flex items-center justify-center space-x-2 transition-all duration-200 hover:bg-[#ed1c24] active:scale-[0.98]">
+            <ShoppingBag className="h-4 w-4" />
+            <span>Tambah ke Keranjang</span>
+          </button>
+        </div>
       </div>
     </div>
   );

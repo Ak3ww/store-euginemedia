@@ -1,11 +1,19 @@
 import Link from "next/link";
-import Image from "next/image";
 
 export default function Logo() {
   return (
-    <Link href="/" className="flex items-center space-x-2">
-      <Image width={32} height={32} src="/logo.png" className="rounded-md" alt="logo" />
-      <span className="font-medium">EcommerceKit</span>
+    <Link href="/" className="flex items-center space-x-2.5 group">
+      <div className="flex h-8 w-8 items-center justify-center rounded-[4px] bg-neutral-900 text-white font-['Archivo'] font-black text-sm tracking-wider group-hover:bg-[#ed1c24] transition-colors">
+        ES
+      </div>
+      <div className="flex flex-col">
+        <span className="font-['Archivo'] text-base font-black tracking-tight text-neutral-900 leading-tight">
+          Eugine<span className="text-[#ed1c24]">Store</span>
+        </span>
+        <span className="text-[10px] font-semibold text-neutral-500 uppercase tracking-widest font-['Roboto'] -mt-0.5">
+          Eugine Media Group
+        </span>
+      </div>
     </Link>
   );
 }
