@@ -37,7 +37,7 @@ DB_USER="euginestore"
 DB_PASS="EugineStorePass2026!"
 
 echo -e "${CYAN}================================================================${NC}"
-echo -e "${BOLD} 🚀 DEPLOY EUGINESTORE (NEXT.JS 14 PURE BUNDUI & SHADCN UI) ${NC}"
+echo -e "${BOLD} 🚀 DEPLOY EUGINESTORE (CRICKET-WEAPON AESTHETICS & STANDALONE) ${NC}"
 echo -e "${CYAN}================================================================${NC}"
 echo -e " Domain Target : ${GREEN}https://${DOMAIN}${NC}"
 echo -e " Direktori VPS : ${GREEN}${APP_DIR}${NC}"
