@@ -1,97 +1,52 @@
-"use client";
-
-import React from "react";
-import { ShieldCheck, Truck, Headphones, Award, ArrowRight, MessageCircle } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export function Hero() {
+export default function Hero() {
   return (
-    <section className="relative overflow-hidden mb-8">
-      {/* Hero Banner Box */}
-      <div className="relative rounded-2xl bg-gradient-to-br from-[#002c60] via-[#0d3870] to-[#1b437c] text-white p-6 sm:p-10 shadow-lg shadow-[#002c60]/10 overflow-hidden">
-        {/* Subtle Decorative Ambient Circles */}
-        <div className="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-white/5 blur-2xl pointer-events-none" />
-        <div className="absolute -left-16 -bottom-16 w-80 h-80 rounded-full bg-[#1b437c]/30 blur-2xl pointer-events-none" />
-
-        <div className="relative z-10 max-w-2xl">
-          {/* Trust Badge Pill */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-emerald-300 mb-4">
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span>Distributor Perangkat Jaringan & FTTH Resmi Indonesia</span>
-          </div>
-
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight sm:leading-tight mb-3">
-            Kebutuhan ISP & RT-RW Net, Lengkap & Terpercaya
-          </h1>
-
-          <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-6 max-w-xl">
-            Sedia router MikroTik original, Mini OLT GPON/EPON, Modem ONT XPON, dan kabel dropcore fiber optic
-            berkualitas dengan garansi tukar baru dan dukungan teknisi jaringan.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <a href="#katalog">
-              <Button className="h-10 px-5 bg-white hover:bg-slate-100 text-[#002c60] font-bold text-xs rounded-xl shadow-md transition-all">
-                Jelajahi Katalog <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-              </Button>
-            </a>
-
-            <a
-              href="https://wa.me/6281548727257?text=Halo%20Sales%20EugineStore,%20saya%20ingin%20konsultasi%20kebutuhan%20perangkat%20jaringan."
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button
-                variant="outline"
-                className="h-10 px-4 bg-white/10 hover:bg-white/20 text-white border-white/20 font-semibold text-xs rounded-xl backdrop-blur-sm"
-              >
-                <MessageCircle className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
-                Konsultasi WhatsApp
-              </Button>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Trust Perks Bar */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-        <div className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs">
-          <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
-            <ShieldCheck className="w-4 h-4" />
-          </div>
+    <section className="bg-gradient-to-r from-gray-50 to-white">
+      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           <div>
-            <div className="text-xs font-bold text-slate-800">100% Produk Original</div>
-            <div className="text-[11px] text-slate-400">Garansi resmi distributor</div>
+            <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-6xl">
+              Discover Premium
+              <span className="text-primary block">Products</span>
+            </h1>
+            <p className="mb-8 max-w-lg text-xl text-gray-600">
+              Experience exceptional quality and modern design. Shop our curated collection of
+              premium products crafted for the modern lifestyle.
+            </p>
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <Link href="/products">
+                <Button size="lg" className="w-full sm:w-auto">
+                  Shop Now
+                </Button>
+              </Link>
+              <Link href="/about">
+                <Button variant="outline" size="lg" className="w-full bg-transparent sm:w-auto">
+                  Learn More
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
-
-        <div className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs">
-          <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
-            <Award className="w-4 h-4" />
-          </div>
-          <div>
-            <div className="text-xs font-bold text-slate-800">Garansi Tukar Baru</div>
-            <div className="text-[11px] text-slate-400">Rusak pabrik ganti unit</div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs">
-          <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0">
-            <Truck className="w-4 h-4" />
-          </div>
-          <div>
-            <div className="text-xs font-bold text-slate-800">Kirim Seluruh RI</div>
-            <div className="text-[11px] text-slate-400">JNE, J&T, SiCepat, Cargo</div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs">
-          <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0">
-            <Headphones className="w-4 h-4" />
-          </div>
-          <div>
-            <div className="text-xs font-bold text-slate-800">Support Teknis ISP</div>
-            <div className="text-[11px] text-slate-400">Bantuan konfigurasi tim ahli</div>
+          <div className="relative">
+            <div className="aspect-square overflow-hidden rounded-2xl bg-gray-100">
+              <img
+                src="https://images.unsplash.com/photo-1511892549826-a48122d9b258?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Hero Product"
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="absolute -bottom-6 -left-6 rounded-xl bg-white p-6 shadow-lg">
+              <div className="flex items-center space-x-4">
+                <div className="bg-primary flex h-12 w-12 items-center justify-center rounded-full">
+                  <span className="font-bold text-white">50%</span>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">Special Offer</p>
+                  <p className="text-sm text-gray-600">Limited time only</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
