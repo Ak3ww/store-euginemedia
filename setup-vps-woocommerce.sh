@@ -34,16 +34,8 @@ fi
 DOMAIN="store.euginemediagroup.com"
 STORE_DIR="/var/www/store-euginemedia"
 DB_NAME="euginestore_db"
-DB_USER="root"
-DB_PASS=""
-
-# Cek password mysql jika ada dari config sistem
-if [ -f "/var/www/EugineBill-radius/.env" ]; then
-    DB_URL_LINE=$(grep "^DATABASE_URL=" /var/www/EugineBill-radius/.env || true)
-    if [[ "$DB_URL_LINE" =~ :([^@]+)@ ]]; then
-        DB_PASS="${BASH_REMATCH[1]}"
-    fi
-fi
+DB_USER="euginestore"
+DB_PASS="EugineStorePass2026!"
 
 ADMIN_USER="admin"
 ADMIN_EMAIL="admin@euginemediagroup.com"
@@ -56,7 +48,7 @@ echo -e "${BOLD} 🚀 SETUP OTOMATIS EUGINESTORE VIA WOOCOMMERCE & BUNDUI THEME 
 echo -e "${CYAN}================================================================${NC}"
 echo -e " Domain Target : ${GREEN}https://${DOMAIN}${NC}"
 echo -e " Direktori VPS : ${GREEN}${STORE_DIR}${NC} (100% Terisolasi di Repo store-euginemedia)"
-echo -e " Database Toko : ${GREEN}${DB_NAME}${NC}"
+echo -e " Database Toko : ${GREEN}${DB_NAME}${NC} (User: ${DB_USER})"
 echo -e " Admin Login   : ${GREEN}${ADMIN_USER}${NC} (${ADMIN_EMAIL})"
 echo -e "================================================================\n"
 
@@ -96,18 +88,27 @@ fi
 log_success "WP-CLI siap: $(wp --version --allow-root)"
 
 # ------------------------------------------------------------------------------
-# 3. Buat Database MySQL Terpisah
+# 3. Buat Database MySQL & Dedicated User Terpisah
 # ------------------------------------------------------------------------------
-log_info "3/7 Menyiapkan database MySQL terisolasi '${DB_NAME}'..."
-MYSQL_CMD="mysql -u ${DB_USER}"
-if [ -n "$DB_PASS" ]; then
-    MYSQL_CMD="mysql -u ${DB_USER} -p${DB_PASS}"
+log_info "3/7 Menyiapkan database MySQL '${DB_NAME}' & user '${DB_USER}'..."
+
+MYSQL_EXEC="mysql"
+if ! mysql -e "SELECT 1;" >/dev/null 2>&1; then
+    if [ -f "/var/www/EugineBill-radius/.env" ]; then
+        ROOT_PASS_MATCH=$(grep "^DATABASE_URL=" /var/www/EugineBill-radius/.env | sed -E 's/.*:([^@]*)@.*/\1/' || true)
+        if [ -n "$ROOT_PASS_MATCH" ]; then
+            MYSQL_EXEC="mysql -u root -p${ROOT_PASS_MATCH}"
+        fi
+    fi
 fi
 
-$MYSQL_CMD -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" 2>/dev/null || {
-    mysql -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-}
-log_success "Database '${DB_NAME}' berhasil dibuat/dikonfirmasi."
+$MYSQL_EXEC -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+$MYSQL_EXEC -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';"
+$MYSQL_EXEC -e "ALTER USER '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';"
+$MYSQL_EXEC -e "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'localhost';"
+$MYSQL_EXEC -e "FLUSH PRIVILEGES;"
+
+log_success "Database '${DB_NAME}' dan user '${DB_USER}' siap digunakan."
 
 # ------------------------------------------------------------------------------
 # 4. Unduh & Setup WordPress Core
@@ -115,18 +116,24 @@ log_success "Database '${DB_NAME}' berhasil dibuat/dikonfirmasi."
 log_info "4/7 Menyiapkan instalasi WordPress di ${STORE_DIR}..."
 cd "$STORE_DIR"
 
-if [ ! -f "$STORE_DIR/wp-config.php" ]; then
-    # Unduh WordPress
-    wp core download --locale=id_ID --allow-root || wp core download --allow-root
-
-    # Buat wp-config.php
-    WP_CONFIG_ARGS="--dbname=${DB_NAME} --dbuser=${DB_USER} --dbhost=127.0.0.1 --locale=id_ID --allow-root"
-    if [ -n "$DB_PASS" ]; then
-        WP_CONFIG_ARGS="${WP_CONFIG_ARGS} --dbpass=${DB_PASS}"
+# Jika wp-config belum ada atau instalasi belum selesai
+if ! wp core is-installed --allow-root 2>/dev/null; then
+    # Unduh core jika belum ada
+    if [ ! -f "$STORE_DIR/wp-includes/version.php" ]; then
+        wp core download --allow-root
     fi
-    wp config create $WP_CONFIG_ARGS --force
 
-    # Install Core
+    # Buat ulang wp-config.php dengan kredensial dedicated user
+    rm -f "$STORE_DIR/wp-config.php"
+    wp config create \
+        --dbname="${DB_NAME}" \
+        --dbuser="${DB_USER}" \
+        --dbpass="${DB_PASS}" \
+        --dbhost="localhost" \
+        --force \
+        --allow-root
+
+    # Install Core WordPress
     wp core install \
         --url="https://${DOMAIN}" \
         --title="Eugine Store — Pusat Perangkat Jaringan & FTTH" \
