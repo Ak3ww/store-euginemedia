@@ -2,7 +2,7 @@ import type React from "react";
 import type { Metadata } from "next";
 import { Archivo, Roboto } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/navbar";
+import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/footer";
 
 const archivo = Archivo({
@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="id">
       <body className={`${archivo.variable} ${roboto.variable} font-sans antialiased text-neutral-900 bg-[#f8f9fa]`}>
-        <Navbar />
+        <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />
       </body>
