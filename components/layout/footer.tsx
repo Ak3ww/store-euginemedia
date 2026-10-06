@@ -1,135 +1,153 @@
+import React from "react";
 import Link from "next/link";
-import { Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Logo from "@/components/logo";
+import { ShieldCheck, Truck, MessageCircle, MapPin, Phone } from "lucide-react";
 
-const FacebookIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
-  </svg>
-);
-
-const TwitterIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-  </svg>
-);
-
-const InstagramIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-  </svg>
-);
-
-export default function Footer() {
+export function Footer() {
   return (
-    <footer className="border-t">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-          {/* Logo and Description */}
-          <div className="col-span-1 md:col-span-2">
-            <div className="space-y-4">
-              <Logo />
-              <p className="text-muted-foreground mb-6 max-w-md">
-                Discover premium products with exceptional quality and modern design. Your
-                satisfaction is our priority.
-              </p>
+    <footer className="mt-16 bg-white border-t border-slate-200">
+      {/* Upper Footer Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Brand Info */}
+          <div className="md:col-span-1 space-y-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#002c60] text-white flex items-center justify-center font-extrabold text-sm">
+                ES
+              </div>
+              <span className="text-lg font-extrabold text-[#002c60]">EugineStore</span>
             </div>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Distributor resmi perangkat jaringan komputer, MikroTik, OLT GPON/EPON, modem ONT, dan aksesoris fiber
+              optik FTTH untuk ISP dan penggiat RT-RW Net seluruh Nusantara.
+            </p>
+            <div className="pt-2 text-xs text-slate-600 space-y-1.5">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-[#002c60]" />
+                <span>Cibinong, Bogor, Jawa Barat</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                <span>WhatsApp: +62 815-4872-7257</span>
+              </div>
+            </div>
+          </div>
 
-            {/* Newsletter */}
-            <div className="mb-6">
-              <h3 className="mb-3 text-sm font-semibold text-gray-900">
-                Subscribe to our newsletter
-              </h3>
-              <div className="flex space-x-2">
-                <Input type="email" placeholder="Enter your email" className="flex-1" />
-                <Button>Subscribe</Button>
+          {/* Nav Links */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Kategori Produk</h4>
+            <ul className="space-y-2 text-xs text-slate-500">
+              <li>
+                <a href="#katalog" className="hover:text-[#002c60]">
+                  Router MikroTik
+                </a>
+              </li>
+              <li>
+                <a href="#katalog" className="hover:text-[#002c60]">
+                  OLT GPON & EPON
+                </a>
+              </li>
+              <li>
+                <a href="#katalog" className="hover:text-[#002c60]">
+                  Modem ONT XPON
+                </a>
+              </li>
+              <li>
+                <a href="#katalog" className="hover:text-[#002c60]">
+                  Kabel Dropcore Preconn
+                </a>
+              </li>
+              <li>
+                <a href="#katalog" className="hover:text-[#002c60]">
+                  Alat Ukur OPM & VFL
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Payment Methods */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Metode Pembayaran</h4>
+            <div className="flex flex-wrap gap-2 items-center">
+              <div className="h-7 px-2 bg-slate-50 border border-slate-200 rounded flex items-center justify-center">
+                <img src="/images/banks/qris.svg" alt="QRIS" className="h-4 object-contain" />
+              </div>
+              <div className="h-7 px-2 bg-slate-50 border border-slate-200 rounded flex items-center justify-center">
+                <img src="/images/banks/bca.svg" alt="BCA" className="h-3.5 object-contain" />
+              </div>
+              <div className="h-7 px-2 bg-slate-50 border border-slate-200 rounded flex items-center justify-center">
+                <img src="/images/banks/mandiri.svg" alt="Mandiri" className="h-3.5 object-contain" />
+              </div>
+              <div className="h-7 px-2 bg-slate-50 border border-slate-200 rounded flex items-center justify-center">
+                <img src="/images/banks/bri.svg" alt="BRI" className="h-3.5 object-contain" />
+              </div>
+              <div className="h-7 px-2 bg-slate-50 border border-slate-200 rounded flex items-center justify-center">
+                <img src="/images/banks/bni.svg" alt="BNI" className="h-3.5 object-contain" />
               </div>
             </div>
 
-            {/* Social Links */}
-            <div className="flex space-x-4">
-              <a href="#" className="hover:text-primary text-gray-400 transition-colors">
-                <FacebookIcon className="h-5 w-5" />
-              </a>
-              <a href="#" className="hover:text-primary text-gray-400 transition-colors">
-                <TwitterIcon className="h-5 w-5" />
-              </a>
-              <a href="#" className="hover:text-primary text-gray-400 transition-colors">
-                <InstagramIcon className="h-5 w-5" />
-              </a>
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider pt-2">Ekspedisi Logistik</h4>
+            <div className="flex flex-wrap gap-2 items-center">
+              <div className="h-7 px-2 bg-slate-50 border border-slate-200 rounded flex items-center justify-center">
+                <img src="/images/couriers/jne.svg" alt="JNE" className="h-4 object-contain" />
+              </div>
+              <div className="h-7 px-2 bg-slate-50 border border-slate-200 rounded flex items-center justify-center">
+                <img src="/images/couriers/jnt.svg" alt="J&T" className="h-4 object-contain" />
+              </div>
+              <div className="h-7 px-2 bg-slate-50 border border-slate-200 rounded flex items-center justify-center">
+                <img src="/images/couriers/sicepat.svg" alt="SiCepat" className="h-4 object-contain" />
+              </div>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold text-gray-900">Quick Links</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/about"
-                  className="hover:text-primary text-muted-foreground transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="hover:text-primary text-muted-foreground transition-colors">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/faq"
-                  className="hover:text-primary text-muted-foreground transition-colors">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/shipping"
-                  className="hover:text-primary text-muted-foreground transition-colors">
-                  Shipping Info
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* Official Marketplace Links */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Toko Resmi Marketplace</h4>
+            <p className="text-xs text-slate-500">
+              Anda juga dapat berbelanja produk kami melalui marketplace resmi terpercaya:
+            </p>
+            <div className="flex flex-col gap-2 pt-1">
+              <a
+                href="https://shopee.co.id"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#EE4D2D]/30 bg-[#EE4D2D]/5 hover:bg-[#EE4D2D]/10 text-xs font-semibold text-[#EE4D2D] transition-colors"
+              >
+                <img src="/images/marketplaces/shopee.svg" alt="Shopee" className="w-4 h-4" />
+                <span>Shopee Official Store</span>
+              </a>
 
-          {/* Legal */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold text-gray-900">Legal</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/privacy"
-                  className="hover:text-primary text-muted-foreground transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/terms"
-                  className="hover:text-primary text-muted-foreground transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/returns"
-                  className="hover:text-primary text-muted-foreground transition-colors">
-                  Returns
-                </Link>
-              </li>
-            </ul>
+              <a
+                href="https://tokopedia.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#03AC0E]/30 bg-[#03AC0E]/5 hover:bg-[#03AC0E]/10 text-xs font-semibold text-[#03AC0E] transition-colors"
+              >
+                <img src="/images/marketplaces/tokopedia.svg" alt="Tokopedia" className="w-4 h-4" />
+                <span>Tokopedia Official Store</span>
+              </a>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="text-muted-foreground mt-8 border-t border-gray-200 pt-8 text-center">
-          <p>&copy; {new Date().getFullYear()} EcommerceKit. All rights reserved.</p>
+      {/* Bottom Copyright */}
+      <div className="border-t border-slate-100 bg-slate-50/50 py-5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+          <div>
+            &copy; {new Date().getFullYear()} <strong className="text-slate-700">Eugine Media Group</strong>. All
+            rights reserved.
+          </div>
+          <div className="flex items-center gap-4">
+            <Link href="/privacy" className="hover:underline">
+              Kebijakan Privasi
+            </Link>
+            <Link href="/terms" className="hover:underline">
+              Syarat & Ketentuan
+            </Link>
+            <Link href="/admin/login" className="hover:underline text-slate-400">
+              Admin Portal
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

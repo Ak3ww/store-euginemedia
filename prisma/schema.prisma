@@ -3,70 +3,203 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+  SUPERADMIN
+  STAFF
 }
 
 enum OrderStatus {
   PENDING
   PAID
+  PROCESSING
   SHIPPED
   COMPLETED
   CANCELLED
 }
 
-model Product {
+enum PaymentMethod {
+  QRIS
+  BANK_TRANSFER
+}
+
+model Customer {
   id          String      @id @default(cuid())
   name        String
-  description String      @db.Text
-  price       Int         // IDR integer amount
-  stock       Int         @default(0)
-  imageUrl    String?     @db.Text
-  category    String      // e.g., Network, Smart Home, Accessories, Hardware
-  isFeatured  Boolean     @default(false)
+  phone       String      @unique
+  email       String?     @unique
+  image       String?
+  role        Role        @default(CUSTOMER)
+  
+  // Saved Address for Auto-fill checkout
+  address     String?     @db.Text
+  province    String?
+  city        String?
+  district    String?
+  postalCode  String?
+
+  orders      Order[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-  orderItems  OrderItem[]
 
-  @@index([category])
+  @@map("customers")
+}
+
+model CustomerOtp {
+  id        String   @id @default(cuid())
+  phone     String
+  codeHash  String
+  expiresAt DateTime
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+  @@map("customer_otps")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(SUPERADMIN)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("admin_users")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  icon        String?
+  description String?   @db.Text
+  sortOrder   Int       @default(0)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("categories")
+}
+
+model Product {
+  id             String      @id @default(cuid())
+  name           String
+  slug           String      @unique
+  sku            String?     @unique
+  description    String      @db.Text
+  specifications Json?       // Technical specs: ports, cpu, bandwidth, power, etc.
+  price          Int         // IDR integer amount
+  originalPrice  Int?        // Optional strikethrough price
+  weight         Int         @default(500) // Weight in grams for shipping calculation
+  stock          Int         @default(0)
+  images         Json?       // Array of image URLs
+  imageUrl       String?     @db.Text // Primary thumbnail
+  
+  // Multi-Marketplace Links
+  shopeeUrl      String?     @db.Text
+  tokopediaUrl   String?     @db.Text
+  tiktokUrl      String?     @db.Text
+
+  categoryId     String
+  category       Category    @relation(fields: [categoryId], references: [id])
+
+  isFeatured     Boolean     @default(false)
+  isActive       Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  orderItems     OrderItem[]
+
+  @@index([categoryId])
+  @@index([isActive])
   @@map("products")
 }
 
 model Order {
-  id              String      @id @default(cuid())
-  userId          String?     // Optional for guest checkout
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique // e.g. ES-2610-0001
+  
+  customerId      String?
+  customer        Customer?     @relation(fields: [customerId], references: [id])
+
   customerName    String
   customerPhone   String
   customerEmail   String?
-  shippingAddress String      @db.Text
-  totalAmount     Int         // IDR integer amount
-  status          OrderStatus @default(PENDING)
-  snapToken       String?     @db.VarChar(255)
-  snapRedirectUrl String?     @db.Text
-  paymentType     String?     @db.VarChar(50) // e.g. qris, bank_transfer, gopay
+
+  // Shipping Destination
+  shippingAddress String        @db.Text
+  province        String?
+  city            String?
+  district        String?
+  postalCode      String?
+
+  // Logistics
+  courier         String?       // JNE, JNT, SICEPAT
+  courierService  String?       // REG, YES, CARGO
+  shippingCost    Int           @default(0)
+  totalWeight     Int           @default(500) // Grams
+  trackingNumber  String?       // Nomor Resi Pengiriman
+
+  // Pricing & Status
+  subtotalAmount  Int           @default(0)
+  totalAmount     Int           // Final total IDR
+  status          OrderStatus   @default(PENDING)
+  paymentMethod   PaymentMethod @default(QRIS)
+
+  // Payment Tracking
+  qrisString      String?       @db.Text
+  qrisInvoiceId   String?       @db.VarChar(255)
+  paymentProofUrl String?       @db.Text
   paidAt          DateTime?
-  notes           String?     @db.Text
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  shippedAt       DateTime?
+  notes           String?       @db.Text
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
   items           OrderItem[]
 
   @@index([status])
   @@index([customerPhone])
+  @@index([customerId])
   @@map("orders")
 }
 
 model OrderItem {
-  id        String   @id @default(cuid())
-  orderId   String
-  productId String
-  quantity  Int      @default(1)
-  price     Int      // Snapshot price at purchase time
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  orderId     String
+  productId   String
+  productName String
+  price       Int      // Snapshot price at purchase time
+  quantity    Int      @default(1)
+  weight      Int      @default(500)
+  subtotal    Int      @default(0)
+  createdAt   DateTime @default(now())
 
-  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id])
 
   @@index([orderId])
   @@index([productId])
   @@map("order_items")
+}
+
+model StoreSetting {
+  id               String   @id @default("default")
+  storeName        String   @default("EugineStore")
+  phone            String   @default("6281548727257")
+  address          String   @default("Cibinong, Bogor, Jawa Barat")
+  defaultOriginCity String  @default("Bogor")
+  qrinApiKey       String?
+  qrinMerchantId   String?
+  bankAccounts     Json?    // Array of bank account details { bank: 'BCA', number: '...', holder: '...' }
+  updatedAt        DateTime @updatedAt
+
+  @@map("store_settings")
 }

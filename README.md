@@ -1,22 +1,62 @@
-# EcommerceKit
+# EugineStore — Platform E-Commerce Perangkat Jaringan & FTTH
 
-EcommerceKit is the Next.js starter kit that includes the tools you need to quickly launch your e-commerce website. It includes the components and blocks you need. It also includes an authentication system, mailing integration, and many third-party packages.
+Platform e-commerce modern, mandiri, dan berkinerja tinggi berbasis **Next.js 14 (App Router) + Tailwind CSS + BundUI / Shadcn UI** dengan palet resmi **Oceanic Blue** (`#002c60`).
 
-## Getting Started
+---
 
-First, run the development server:
+## 🚀 Fitur Unggulan
+
+### 1. Storefront Mobile-Friendly (Pure BundUI)
+- **Desain Modern**: Hairline border, shadow lembut, font Inter, dan palet warna korporat Oceanic Blue.
+- **Mobile 2-Kolom Grid**: Tampilan katalog 2 kolom di smartphone ala Shopee/Tokopedia yang ramah layar sentuh.
+- **Category Filter Pills**: Filter tab instan untuk Router MikroTik, OLT FTTH, Modem ONT, Kabel Fiber, dan Tools.
+- **Multi-Marketplace Integration**: Dukungan tombol belanja resmi di **Shopee** dan **Tokopedia** pada setiap produk.
+- **Slide-over Cart Drawer**: Melihat keranjang belanja tanpa reload halaman.
+
+### 2. Autentikasi Pelanggan (WhatsApp OTP & Google)
+- **Login Instan via WhatsApp**: Masukkan nomor WhatsApp $\rightarrow$ terima 6 digit kode OTP via bot EugineBill $\rightarrow$ langsung login.
+- **Bebas Jelajah**: Pengunjung bebas melihat produk dan menambah ke keranjang tanpa login.
+- **Checkout Guard**: Login diwajibkan saat masuk ke tahap checkout.
+- **Auto-Save Alamat**: Alamat pengiriman otomatis tersimpan ke profil pelanggan untuk transaksi berikutnya (*1-click auto-fill*).
+
+### 3. Pembayaran & Pengiriman Indonesia
+- **QRIS Real-Time**: Dynamic QRIS barcode otomatis via QRIN API.
+- **Transfer Bank Manual**: Rekening resmi BCA & Mandiri dengan tombol salin nomor rekening 1-klik.
+- **Kalkulator Ongkir Logistik**: JNE (Reg/Cargo), J&T, SiCepat berdasarkan berat gram barang.
+- **Notifikasi WhatsApp Otomatis**: Invoice pesanan dan nomor resi pengiriman dikirim langsung ke WhatsApp pembeli via service lokal port 3002.
+
+### 4. Admin Portal Terintegrasi (`/admin`)
+- **Dashboard Metrik**: Total omset, pesanan masuk, pesanan siap kirim, dan grafik tren.
+- **Manajemen Produk**: Tambah/edit produk, upload foto, atur stok & harga, dan input link Shopee/Tokopedia.
+- **Manajemen Pesanan**: Update status pesanan & input nomor resi dengan otomatis mengirim alert WA ke pembeli.
+
+---
+
+## 🛠️ Stack Teknologi
+
+- **Frontend**: Next.js 14, React 19, Tailwind CSS v4, Radix UI Primitives, Lucide Icons, Zustand
+- **Backend**: Next.js App Router API Routes, Zod Validation, Jose & JWT, BcryptJS
+- **Database**: MySQL 8.0 via Prisma ORM
+- **Payment**: QRIN QRIS Gateway API
+- **Messaging**: EugineBill-wa (Port 3002)
+
+---
+
+## 📦 Deployment ke VPS Ubuntu (1-Command)
+
+Buka terminal SSH VPS Anda di direktori `/var/www/store-euginemedia`, lalu jalankan:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd /var/www/store-euginemedia
+git pull origin main
+sudo bash deploy-vps.sh
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Aplikasi akan otomatis terpasang dan berjalan di **PM2 port 3005** (`euginestore-web`) di balik reverse proxy Nginx pada domain `store.euginemediagroup.com` lengkap dengan sertifikat SSL Certbot!
 
-Preview:
-![alt text](https://github.com/bundui/ecommerce-kit/blob/main/public/preview.png?raw=true "EcommerceKit Preview")
+---
+
+## 🔐 Kredensial Default Admin
+- **URL Admin**: `https://store.euginemediagroup.com/admin`
+- **Username**: `admin@euginemediagroup.com`
+- **Password**: `EugineStore2026!`

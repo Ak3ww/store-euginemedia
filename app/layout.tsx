@@ -1,25 +1,34 @@
-import type React from "react";
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
+import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
+import { CartDrawer } from "@/components/cart/CartDrawer";
+import { AuthModal } from "@/components/auth/AuthModal";
+import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 
-const inter = Geist({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Modern E-commerce Store",
-  description: "A modern and responsive e-commerce website",
-  generator: "v0.dev"
+  title: "EugineStore — Pusat Perangkat Jaringan ISP & FTTH Resmi",
+  description:
+    "Distributor router MikroTik, OLT EPON/GPON, modem ONT XPON, dan kabel dropcore fiber optic terpercaya di Indonesia dengan garansi resmi dan dukungan teknis.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="id" className="scroll-smooth">
+      <body className={`${inter.className} min-h-screen bg-slate-50 text-slate-900 antialiased flex flex-col`}>
         <Navbar />
-        {children}
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">{children}</main>
         <Footer />
+        <CartDrawer />
+        <AuthModal />
+        <FloatingWhatsApp />
       </body>
     </html>
   );
