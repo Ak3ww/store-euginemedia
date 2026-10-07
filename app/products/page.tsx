@@ -2,18 +2,29 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
+
+const STORE_CATEGORIES = [
+  { name: "Router & MikroTik", slug: "router" },
+  { name: "Modem ONT & FTTH", slug: "ftth" },
+  { name: "Kabel & Dropcore", slug: "cables" },
+  { name: "Tools & Splicer", slug: "tools" },
+  { name: "CCTV & Security", slug: "cctv" },
+  { name: "Hardware & PC", slug: "hardware" },
+  { name: "Merchandise", slug: "merchandise" },
+];
 
 export default function ProductsPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-[40vh] items-center justify-center space-x-2">
+        <div className="flex min-h-[50vh] items-center justify-center space-x-2">
           <Loader2 className="h-6 w-6 animate-spin text-neutral-900" />
           <span className="text-sm font-medium text-neutral-600 font-['Roboto']">Memuat produk...</span>
         </div>
-      }>
+      }
+    >
       <ProductsContent />
     </Suspense>
   );
@@ -21,127 +32,226 @@ export default function ProductsPage() {
 
 function ProductsContent() {
   const searchParams = useSearchParams();
-  const categoryParam = searchParams.get("category") || "all";
+  const categoryParam = searchParams.get("category") || "";
+  const queryParam = searchParams.get("q") || "";
 
   const [products, setProducts] = useState<any[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState(categoryParam);
-  const [searchQuery, setSearchQuery] = useState("");
 
-  // Sync category param with state
+  // Filter States (Exact Cricket-Weapon Products.jsx)
+  const [selectedCategory, setSelectedCategory] = useState(categoryParam);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(15000000);
+  const [selectedRating, setSelectedRating] = useState("all");
+
   useEffect(() => {
     setSelectedCategory(categoryParam);
   }, [categoryParam]);
 
-  // Fetch Products & Categories
   useEffect(() => {
     async function loadData() {
       setLoading(true);
       try {
-        const [prodRes, catRes] = await Promise.all([
-          fetch(`/api/products?category=${selectedCategory}&q=${encodeURIComponent(searchQuery)}`),
-          fetch("/api/categories"),
-        ]);
-
+        const prodRes = await fetch(
+          `/api/products?category=${selectedCategory || "all"}&q=${encodeURIComponent(queryParam)}`
+        );
         const prodJson = await prodRes.json();
-        const catJson = await catRes.json();
 
         if (prodJson.success && prodJson.products?.length > 0) {
           setProducts(prodJson.products);
         } else {
-          // Fallback to static data if database product list empty
           const { sampleProducts } = await import("@/lib/data");
-          setProducts(sampleProducts.map((p) => ({ ...p, slug: p.id, imageUrl: p.image, stock: 25, weight: 500 })));
-        }
-
-        if (catJson.success && catJson.categories?.length > 0) {
-          setCategories(catJson.categories);
+          setProducts(
+            sampleProducts.map((p) => ({ ...p, slug: p.id, imageUrl: p.image, stock: 25, weight: 500 }))
+          );
         }
       } catch (err) {
-        console.warn("Failed fetching products:", err);
+        console.warn("Error fetching products:", err);
       } finally {
         setLoading(false);
       }
     }
 
-    const timer = setTimeout(loadData, 250);
+    const timer = setTimeout(loadData, 200);
     return () => clearTimeout(timer);
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, queryParam]);
+
+  // Client-side Price & Rating Filter
+  const filteredProducts = products.filter((p) => {
+    const matchPrice = p.price >= minPrice && p.price <= maxPrice;
+    const matchRating =
+      selectedRating === "all"
+        ? true
+        : selectedRating === "4"
+        ? (p.rating || 5) >= 4
+        : selectedRating === "3"
+        ? (p.rating || 5) >= 3
+        : true;
+    return matchPrice && matchRating;
+  });
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      {/* Title & Search Bar */}
-      <div className="mb-8 border-b border-neutral-200 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <span className="text-xs font-bold uppercase tracking-widest text-[#ed1c24] font-['Archivo']">
-            Katalog Resmi
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-neutral-900 font-['Archivo'] mt-1">
-            Katalog Produk & Merchandise
-          </h1>
-          <p className="mt-1 text-xs sm:text-sm text-neutral-600 font-['Roboto']">
-            Seluruh produk dijamin 100% original bergaransi resmi PT Eugine Media Group.
-          </p>
-        </div>
+    <div className="w-full max-w-[1440px] mx-auto px-4 py-8">
+      {/* Container 2-Kolom: Sidebar Kiri (filterBox) + Grid Kanan (products) persis Products.jsx */}
+      <div className="flex flex-col lg:flex-row gap-6 items-start">
+        {/* ============================================================ */}
+        {/* 1. SIDEBAR FILTER KIRI (Exact Cricket-Weapon filterBox)       */}
+        {/* ============================================================ */}
+        <aside className="w-full lg:w-[280px] bg-white rounded-[5px] p-6 shadow-[0_0_5px_rgba(0,0,0,0.2)] shrink-0">
+          {/* Price Filter Header */}
+          <h3 className="text-[17px] font-[700] text-[#414141] font-['Roboto'] mb-3">Price Range (Rp)</h3>
 
-        {/* Search Input (Cricket-Weapon Style) */}
-        <div className="relative w-full md:w-80">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari nama produk, sku..."
-            className="w-full h-11 pl-10 pr-4 bg-white border border-neutral-300 rounded-[4px] text-sm text-neutral-900 focus:outline-none focus:border-neutral-900 font-['Roboto']"
-          />
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
-        </div>
-      </div>
+          <div className="space-y-3 mb-6">
+            <div className="flex items-center space-x-2">
+              <input
+                type="number"
+                value={minPrice}
+                onChange={(e) => setMinPrice(Number(e.target.value) || 0)}
+                className="w-full h-9 px-2 text-xs border border-neutral-300 rounded-[3px] font-['Roboto']"
+                placeholder="Min"
+              />
+              <span className="text-sm text-[#414141] font-medium">to</span>
+              <input
+                type="number"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Number(e.target.value) || 15000000)}
+                className="w-full h-9 px-2 text-xs border border-neutral-300 rounded-[3px] font-['Roboto']"
+                placeholder="Max"
+              />
+            </div>
+            <div className="text-[11px] text-neutral-400">
+              Rp {minPrice.toLocaleString("id-ID")} — Rp {maxPrice.toLocaleString("id-ID")}
+            </div>
+          </div>
 
-      {/* Category Pills Filter */}
-      <div className="mb-8 flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none">
-        <button
-          onClick={() => setSelectedCategory("all")}
-          className={`h-9 px-4 rounded-[4px] text-xs font-bold uppercase tracking-wider font-['Archivo'] transition-all shrink-0 ${
-            selectedCategory === "all"
-              ? "bg-neutral-900 text-white"
-              : "bg-white border border-neutral-200 text-neutral-700 hover:border-neutral-900"
-          }`}>
-          Semua Produk
-        </button>
+          <div className="w-full h-[0.8px] bg-[#d7d5d2d4] mb-6" />
 
-        {categories.map((cat) => (
+          {/* Categories Filter */}
+          <h3 className="text-[17px] font-[700] text-[#414141] font-['Roboto'] mb-3">Categories</h3>
+
+          <ul className="space-y-2 mb-6">
+            <li className="flex items-center space-x-2.5">
+              <input
+                type="checkbox"
+                id="cat-all"
+                checked={selectedCategory === "" || selectedCategory === "all"}
+                onChange={() => setSelectedCategory("")}
+                className="w-4 h-4 accent-[#414141] cursor-pointer"
+              />
+              <label htmlFor="cat-all" className="text-[14px] font-[500] text-[#414141] cursor-pointer hover:text-[#ed1c24] font-['Roboto']">
+                Semua Kategori
+              </label>
+            </li>
+
+            {STORE_CATEGORIES.map((cat) => (
+              <li key={cat.slug} className="flex items-center space-x-2.5">
+                <input
+                  type="checkbox"
+                  id={`cat-${cat.slug}`}
+                  checked={selectedCategory === cat.slug}
+                  onChange={() => setSelectedCategory(selectedCategory === cat.slug ? "" : cat.slug)}
+                  className="w-4 h-4 accent-[#414141] cursor-pointer"
+                />
+                <label htmlFor={`cat-${cat.slug}`} className="text-[14px] font-[500] text-[#414141] cursor-pointer hover:text-[#ed1c24] font-['Roboto']">
+                  {cat.name}
+                </label>
+              </li>
+            ))}
+          </ul>
+
+          <div className="w-full h-[0.8px] bg-[#d7d5d2d4] mb-6" />
+
+          {/* Ratings Above Filter */}
+          <h3 className="text-[17px] font-[700] text-[#414141] font-['Roboto'] mb-3">Ratings Above</h3>
+
+          <div className="space-y-2 mb-6">
+            <label className="flex items-center space-x-2 cursor-pointer text-sm text-[#414141] font-['Roboto']">
+              <input
+                type="radio"
+                name="rating"
+                value="all"
+                checked={selectedRating === "all"}
+                onChange={(e) => setSelectedRating(e.target.value)}
+                className="accent-[#ed1c24]"
+              />
+              <span>Semua Rating</span>
+            </label>
+
+            <label className="flex items-center space-x-2 cursor-pointer text-sm text-[#414141] font-['Roboto']">
+              <input
+                type="radio"
+                name="rating"
+                value="4"
+                checked={selectedRating === "4"}
+                onChange={(e) => setSelectedRating(e.target.value)}
+                className="accent-[#ed1c24]"
+              />
+              <span>4★ & above</span>
+            </label>
+
+            <label className="flex items-center space-x-2 cursor-pointer text-sm text-[#414141] font-['Roboto']">
+              <input
+                type="radio"
+                name="rating"
+                value="3"
+                checked={selectedRating === "3"}
+                onChange={(e) => setSelectedRating(e.target.value)}
+                className="accent-[#ed1c24]"
+              />
+              <span>3★ & above</span>
+            </label>
+          </div>
+
+          {/* Reset Filter Button */}
           <button
-            key={cat.id || cat.slug}
-            onClick={() => setSelectedCategory(cat.slug)}
-            className={`h-9 px-4 rounded-[4px] text-xs font-bold uppercase tracking-wider font-['Archivo'] transition-all shrink-0 ${
-              selectedCategory === cat.slug
-                ? "bg-neutral-900 text-white"
-                : "bg-white border border-neutral-200 text-neutral-700 hover:border-neutral-900"
-            }`}>
-            {cat.name}
+            onClick={() => {
+              setSelectedCategory("");
+              setMinPrice(0);
+              setMaxPrice(15000000);
+              setSelectedRating("all");
+            }}
+            className="w-full h-9 bg-neutral-100 hover:bg-[#ed1c24] hover:text-white text-[#414141] text-xs font-bold uppercase rounded-[3px] transition-colors font-['Archivo'] cursor-pointer"
+          >
+            Reset Filter
           </button>
-        ))}
-      </div>
+        </aside>
 
-      {/* Product List */}
-      {loading ? (
-        <div className="flex min-h-[40vh] items-center justify-center space-x-2">
-          <Loader2 className="h-6 w-6 animate-spin text-neutral-900" />
-          <span className="text-sm font-medium text-neutral-600 font-['Roboto']">Memuat produk...</span>
-        </div>
-      ) : products.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-md border border-neutral-200">
-          <p className="text-base font-bold font-['Archivo'] text-neutral-800">Tidak ada produk ditemukan</p>
-          <p className="text-xs text-neutral-500 font-['Roboto'] mt-1">Coba gunakan kata kunci pencarian lain.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      )}
+        {/* ============================================================ */}
+        {/* 2. GRID PRODUK KANAN (Exact Cricket-Weapon products)         */}
+        {/* ============================================================ */}
+        <main className="flex-1 w-full">
+          {loading ? (
+            <div className="flex min-h-[40vh] items-center justify-center space-x-2">
+              <Loader2 className="h-6 w-6 animate-spin text-black" />
+              <span className="text-sm font-medium text-neutral-600 font-['Roboto']">Memuat produk...</span>
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="text-center py-20 bg-white rounded-[5px] shadow-[0_0_5px_rgba(0,0,0,0.15)] p-8">
+              <h3 className="text-xl font-bold font-['Archivo'] text-neutral-800">Product Not Found</h3>
+              <p className="text-sm text-neutral-500 font-['Roboto'] mt-1">
+                Tidak ada produk yang cocok dengan filter harga atau kategori ini.
+              </p>
+              <button
+                onClick={() => {
+                  setSelectedCategory("");
+                  setMinPrice(0);
+                  setMaxPrice(15000000);
+                  setSelectedRating("all");
+                }}
+                className="mt-4 px-6 py-2 bg-black text-white text-xs font-bold uppercase tracking-wider rounded-[3px] hover:bg-[#ed1c24] transition-colors"
+              >
+                Reset Filter
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap justify-center sm:justify-start gap-[1.5rem]">
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }

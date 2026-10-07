@@ -1,0 +1,116 @@
+/* FeaturedSlider Component exact 1:1 replica of Cricket-Weapon FeatureSlider.css */
+.featured_swiper {
+  position: relative;
+  padding: 30px 0;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.featured_slides {
+  position: relative;
+  overflow: hidden;
+  width: 280px;
+  height: 370px;
+  background-color: #fff !important;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.featured_slides:hover {
+  transform: scale(1.02);
+  z-index: 2;
+}
+
+.featured_slides.swiper-slide-active,
+.featured_slides:hover {
+  transform: scale(1.05);
+  z-index: 2;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.564);
+}
+
+.swiper-pagination-bullet-active {
+  background-color: black !important;
+}
+
+.featured_title {
+  font-family: "Archivo", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  padding: 0 16px;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.featured_img {
+  width: 100%;
+  height: 200px;
+  margin: 0 auto;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+}
+
+.featured_img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.products_price {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.final_price {
+  font-family: "Archivo", sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: #000;
+  margin-right: 5px;
+}
+
+.old_price {
+  font-family: "Archivo", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgb(75, 66, 66);
+  text-decoration: line-through;
+  margin-left: 5px;
+}
+
+.featured_slides:hover .featured_title,
+.featured_slides:hover .final_price,
+.featured_slides:hover .old_price {
+  color: #e30605;
+}
+
+/* Active product border highlight in slider */
+.featured_swiper .swiper-slide {
+  opacity: 0.6;
+  transition: opacity 0.5s ease;
+  background-color: transparent;
+}
+
+.featured_swiper .swiper-slide-active {
+  opacity: 1;
+  border-left: 5px solid #e30605 !important;
+  border-right: 5px solid #e30605 !important;
+}
+
+.featured_swiper .swiper-pagination {
+  background-color: transparent;
+}
