@@ -18,6 +18,8 @@ import {
   AlertCircle
 } from "lucide-react";
 
+import CheckoutSteps from "@/components/cart/CheckoutSteps";
+
 interface CourierOption {
   courier: string;
   service: string;
@@ -204,12 +206,13 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-4xl px-4 py-16 text-center">
+        <CheckoutSteps activeStep={1} />
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100">
           <ShoppingBag className="h-8 w-8 text-neutral-400" />
         </div>
         <h2 className="text-2xl font-bold font-['Archivo'] text-neutral-900">Keranjang Belanja Kosong</h2>
         <p className="mt-2 text-sm text-neutral-600 font-['Roboto']">
-          Pilih produk perangkat atau merchandise terlebih dahulu sebelum checkout.
+          Pilih produk terlebih dahulu sebelum checkout.
         </p>
         <button
           onClick={() => router.push("/products")}
@@ -221,16 +224,19 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      {/* Checkout Title */}
-      <div className="mb-8 border-b border-neutral-200 pb-4">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 font-['Archivo'] uppercase tracking-tight">
-          Formulir Pemesanan & Checkout
-        </h1>
-        <p className="mt-1 text-sm text-neutral-600 font-['Roboto']">
-          Pengiriman resmi langsung dari Gudang EugineStore (Cibinong, Kab. Bogor)
-        </p>
-      </div>
+    <div className="min-h-screen bg-white pb-16">
+      <CheckoutSteps activeStep={1} />
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Checkout Title */}
+        <div className="mb-8 border-b border-neutral-200 pb-4">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 font-['Archivo'] uppercase tracking-tight">
+            Delivery & Shipping Info
+          </h1>
+          <p className="mt-1 text-sm text-neutral-600 font-['Roboto']">
+            Pengiriman resmi langsung dari Gudang EugineStore (Cibinong, Kab. Bogor)
+          </p>
+        </div>
 
       {errorMessage && (
         <div className="mb-6 flex items-center space-x-2 rounded-md bg-red-50 p-4 text-sm text-red-700 border border-red-200">
@@ -584,5 +590,6 @@ export default function CheckoutPage() {
         </div>
       </form>
     </div>
+  </div>
   );
 }

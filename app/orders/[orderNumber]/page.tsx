@@ -19,6 +19,8 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+import CheckoutSteps from "@/components/cart/CheckoutSteps";
+
 export default function OrderTrackingPage() {
   const params = useParams();
   const orderNumber = params?.orderNumber as string;
@@ -88,7 +90,10 @@ export default function OrderTrackingPage() {
   const currentStatus = statusLabels[order.status] || statusLabels.PENDING;
 
   return (
-    <div className="max-w-4xl mx-auto py-6 space-y-8">
+    <div className="min-h-screen bg-white pb-16">
+      <CheckoutSteps activeStep={3} />
+
+      <div className="max-w-4xl mx-auto px-4 space-y-8">
       {/* Top Breadcrumb & Actions */}
       <div className="flex items-center justify-between">
         <Link href="/" className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-[#002c60]">
@@ -273,5 +278,6 @@ export default function OrderTrackingPage() {
         </div>
       </div>
     </div>
+  </div>
   );
 }

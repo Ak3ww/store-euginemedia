@@ -70,31 +70,31 @@ export default function FeaturedSlider({ products }: { products?: ProductItem[] 
       <Swiper
         modules={[EffectCoverflow, Pagination, A11y, Autoplay]}
         loop={true}
-        speed={600}
-        spaceBetween={40}
+        speed={700}
+        grabCursor={true}
+        centeredSlides={true}
         slidesPerView={"auto"}
+        spaceBetween={30}
         pagination={{ clickable: true }}
         effect={"coverflow"}
-        centeredSlides={true}
         coverflowEffect={{
           rotate: 0,
-          stretch: 10,
-          depth: 60,
-          modifier: 2.5,
+          stretch: 0,
+          depth: 70,
+          modifier: 1.2,
           slideShadows: false,
         }}
         autoplay={{
           delay: 3500,
           disableOnInteraction: false,
+          pauseOnMouseEnter: true,
         }}
         breakpoints={{
           640: {
-            slidesPerView: 2,
-            spaceBetween: 60,
+            spaceBetween: 40,
           },
           1024: {
-            slidesPerView: 3,
-            spaceBetween: 80,
+            spaceBetween: 50,
           },
         }}
         className="featured_swiper"
