@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 24" width="48" height="24">
-  <rect width="48" height="24" rx="4" fill="#B30006"/>
-  <text x="24" y="16" font-family="'Inter', sans-serif" font-weight="900" font-size="9" fill="#FFFFFF" text-anchor="middle" font-style="italic">SICEPAT</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" width="120" height="40" fill="none">
+  <rect width="120" height="40" rx="6" fill="#FFFFFF"/>
+  <path d="M12 20L20 8L18 16H26L16 32L18 20H12Z" fill="#ED1C24"/>
+  <text x="32" y="24" font-family="'Archivo', sans-serif" font-weight="900" font-size="14" fill="#ED1C24" font-style="italic">SICEPAT</text>
+  <text x="32" y="33" font-family="'Archivo', sans-serif" font-weight="700" font-size="8" fill="#1A1A1A" letter-spacing="1">EKSPRES</text>
 </svg>

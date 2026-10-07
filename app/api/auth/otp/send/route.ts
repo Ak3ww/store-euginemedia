@@ -52,8 +52,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: "Kode OTP 6-digit telah dikirimkan ke nomor WhatsApp Anda.",
+      message: sendResult.success
+        ? "Kode OTP 6-digit telah dikirimkan ke nomor WhatsApp Anda."
+        : "Kode OTP telah digenerate (Mode Dev: lihat console atau gunakan kode di bawah).",
       phoneFormatted: phone,
+      waDispatched: sendResult.success,
+      debugOtp: process.env.NODE_ENV !== "production" || !sendResult.success ? rawOtp : undefined,
     });
   } catch (error: any) {
     console.error("[OTP Send Error]:", error);

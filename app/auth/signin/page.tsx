@@ -27,6 +27,7 @@ function SignInContent() {
   const [name, setName] = useState("");
   const [step, setStep] = useState<"PHONE" | "OTP">("PHONE");
   const [otp, setOtp] = useState("");
+  const [debugOtp, setDebugOtp] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -36,6 +37,7 @@ function SignInContent() {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
+    setDebugOtp(null);
 
     let cleaned = phone.replace(/\D/g, "");
     if (!cleaned) {
@@ -54,6 +56,9 @@ function SignInContent() {
       if (!res.ok) throw new Error(data.error || "Gagal mengirimkan kode OTP");
 
       setSuccessMsg(data.message || "Kode OTP 6-digit telah dikirimkan ke WhatsApp Anda.");
+      if (data.debugOtp) {
+        setDebugOtp(data.debugOtp);
+      }
       setStep("OTP");
     } catch (err: any) {
       setErrorMsg(err.message || "Terjadi kesalahan koneksi.");
@@ -194,6 +199,17 @@ function SignInContent() {
                 placeholder="123456"
                 className="w-full h-12 text-center text-xl tracking-[0.4em] font-black border border-neutral-300 rounded-[4px] focus:outline-none focus:border-neutral-900 font-['Archivo']"
               />
+              {debugOtp && (
+                <div className="mt-2 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setOtp(debugOtp)}
+                    className="inline-flex items-center text-xs font-semibold text-[#ed1c24] hover:underline bg-red-50 px-2.5 py-1 rounded border border-red-100"
+                  >
+                    Tempel Kode Verifikasi: <strong className="ml-1 tracking-widest">{debugOtp}</strong>
+                  </button>
+                </div>
+              )}
             </div>
 
             <button

@@ -263,6 +263,36 @@ export default function CartPage() {
                 <ShieldCheck className="h-4 w-4 text-emerald-600" />
                 <span>Garansi Resmi Eugine Media Group & Pembayaran Aman</span>
               </div>
+
+              {/* Cricket-Weapon Style paymentLogoImg */}
+              <div className="mt-5 pt-4 border-t border-neutral-100">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 font-['Archivo'] mb-2 text-center">
+                  Metode Pembayaran Didukung
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-1.5 p-2.5 bg-neutral-50 rounded-md border border-neutral-200">
+                  <div className="bg-white px-2 py-0.5 rounded shadow-2xs h-6 flex items-center justify-center">
+                    <img src="/images/banks/qris.svg" alt="QRIS" className="h-3.5 w-auto object-contain" />
+                  </div>
+                  <div className="bg-white px-2 py-0.5 rounded shadow-2xs h-6 flex items-center justify-center">
+                    <img src="/images/banks/bca.svg" alt="BCA" className="h-3.5 w-auto object-contain" />
+                  </div>
+                  <div className="bg-white px-2 py-0.5 rounded shadow-2xs h-6 flex items-center justify-center">
+                    <img src="/images/banks/mandiri.svg" alt="Mandiri" className="h-3.5 w-auto object-contain" />
+                  </div>
+                  <div className="bg-white px-2 py-0.5 rounded shadow-2xs h-6 flex items-center justify-center">
+                    <img src="/images/banks/bni.svg" alt="BNI" className="h-3.5 w-auto object-contain" />
+                  </div>
+                  <div className="bg-white px-2 py-0.5 rounded shadow-2xs h-6 flex items-center justify-center">
+                    <img src="/images/banks/bri.svg" alt="BRI" className="h-3.5 w-auto object-contain" />
+                  </div>
+                  <div className="bg-white px-2 py-0.5 rounded shadow-2xs h-6 flex items-center justify-center">
+                    <img src="/images/banks/gopay.svg" alt="GoPay" className="h-3.5 w-auto object-contain" />
+                  </div>
+                  <div className="bg-white px-2 py-0.5 rounded shadow-2xs h-6 flex items-center justify-center">
+                    <img src="/images/banks/shopeepay.svg" alt="ShopeePay" className="h-3.5 w-auto object-contain" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

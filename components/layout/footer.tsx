@@ -169,8 +169,73 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Separator */}
-      <div className="border-t border-[rgba(48,47,47,0.712)] w-full" />
+      {/* 4. Official Partners: Payments, Couriers, Marketplaces (Exact Third-Party Logos) */}
+      <div className="bg-[#111111] border-y border-neutral-800 py-6 px-4 sm:px-8">
+        <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Pembayaran */}
+          <div>
+            <h5 className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider mb-2.5 font-['Archivo']">
+              Metode Pembayaran Resmi
+            </h5>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="bg-white px-2 py-1 rounded h-7 flex items-center justify-center shadow-xs">
+                <img src="/images/banks/qris.svg" alt="QRIS" className="h-3.5 w-auto object-contain" />
+              </div>
+              <div className="bg-white px-2 py-1 rounded h-7 flex items-center justify-center shadow-xs">
+                <img src="/images/banks/bca.svg" alt="BCA" className="h-3.5 w-auto object-contain" />
+              </div>
+              <div className="bg-white px-2 py-1 rounded h-7 flex items-center justify-center shadow-xs">
+                <img src="/images/banks/mandiri.svg" alt="Mandiri" className="h-3.5 w-auto object-contain" />
+              </div>
+              <div className="bg-white px-2 py-1 rounded h-7 flex items-center justify-center shadow-xs">
+                <img src="/images/banks/bni.svg" alt="BNI" className="h-3.5 w-auto object-contain" />
+              </div>
+              <div className="bg-white px-2 py-1 rounded h-7 flex items-center justify-center shadow-xs">
+                <img src="/images/banks/bri.svg" alt="BRI" className="h-3.5 w-auto object-contain" />
+              </div>
+              <div className="bg-white px-2 py-1 rounded h-7 flex items-center justify-center shadow-xs">
+                <img src="/images/banks/gopay.svg" alt="GoPay" className="h-3.5 w-auto object-contain" />
+              </div>
+              <div className="bg-white px-2 py-1 rounded h-7 flex items-center justify-center shadow-xs">
+                <img src="/images/banks/shopeepay.svg" alt="ShopeePay" className="h-3.5 w-auto object-contain" />
+              </div>
+            </div>
+          </div>
+
+          {/* Jasa Pengiriman */}
+          <div>
+            <h5 className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider mb-2.5 font-['Archivo']">
+              Jasa Pengiriman Terpercaya
+            </h5>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="bg-white px-2 py-1 rounded h-7 flex items-center justify-center shadow-xs">
+                <img src="/images/couriers/jne.svg" alt="JNE" className="h-4.5 w-auto object-contain" />
+              </div>
+              <div className="bg-white px-2 py-1 rounded h-7 flex items-center justify-center shadow-xs">
+                <img src="/images/couriers/jnt.svg" alt="J&T" className="h-4.5 w-auto object-contain" />
+              </div>
+              <div className="bg-white px-2 py-1 rounded h-7 flex items-center justify-center shadow-xs">
+                <img src="/images/couriers/sicepat.svg" alt="SiCepat" className="h-4.5 w-auto object-contain" />
+              </div>
+            </div>
+          </div>
+
+          {/* Toko Marketplace */}
+          <div>
+            <h5 className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider mb-2.5 font-['Archivo']">
+              Official Marketplace Stores
+            </h5>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="bg-white px-2 py-1 rounded h-7 flex items-center justify-center shadow-xs">
+                <img src="/images/marketplaces/tokopedia.svg" alt="Tokopedia" className="h-4 w-auto object-contain" />
+              </div>
+              <div className="bg-white px-2 py-1 rounded h-7 flex items-center justify-center shadow-xs">
+                <img src="/images/marketplaces/shopee.svg" alt="Shopee" className="h-4 w-auto object-contain" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Sub Footer (Exact Cricket-Weapon sub_footer_root) */}
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-4 flex flex-col sm:flex-row items-center justify-between text-[12px] text-white/80 gap-3">

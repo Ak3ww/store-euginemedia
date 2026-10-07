@@ -433,10 +433,23 @@ export default function CheckoutPage() {
                           : "border-neutral-200 hover:border-neutral-400"
                       }`}>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-black uppercase tracking-wider text-neutral-900 font-['Archivo']">
-                          {opt.courier}
-                        </span>
-                        {isSelected && <CheckCircle2 className="h-4 w-4 text-neutral-900" />}
+                        <div className="flex items-center space-x-2">
+                          <img
+                            src={
+                              opt.courier.toLowerCase().includes("jne")
+                                ? "/images/couriers/jne.svg"
+                                : opt.courier.toLowerCase().includes("j&t")
+                                ? "/images/couriers/jnt.svg"
+                                : "/images/couriers/sicepat.svg"
+                            }
+                            alt={opt.courier}
+                            className="h-5 w-auto object-contain"
+                          />
+                          <span className="text-xs font-black uppercase tracking-wider text-neutral-900 font-['Archivo']">
+                            {opt.courier}
+                          </span>
+                        </div>
+                        {isSelected && <CheckCircle2 className="h-4 w-4 text-[#ed1c24]" />}
                       </div>
                       <p className="mt-1 text-[11px] font-semibold text-neutral-600">{opt.service}</p>
                       <p className="text-[11px] text-neutral-500">Estimasi: {opt.etd}</p>
@@ -470,16 +483,20 @@ export default function CheckoutPage() {
                 }`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <QrCode className="h-5 w-5 text-neutral-900" />
+                    <img src="/images/banks/qris.svg" alt="QRIS" className="h-5 w-auto object-contain" />
                     <span className="text-sm font-bold uppercase font-['Archivo'] text-neutral-900">
                       QRIS Real-Time
                     </span>
                   </div>
-                  {paymentMethod === "QRIS" && <CheckCircle2 className="h-4 w-4 text-neutral-900" />}
+                  {paymentMethod === "QRIS" && <CheckCircle2 className="h-4 w-4 text-[#ed1c24]" />}
                 </div>
-                <p className="mt-1.5 text-xs text-neutral-600 font-['Roboto'] leading-relaxed">
-                  BCA, Mandiri, BRI, BNI, GoPay, OVO, ShopeePay, DANA & Seluruh Mobile Banking.
-                </p>
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                  <span className="text-[10px] text-neutral-500">Mendukung:</span>
+                  <img src="/images/banks/bca.svg" alt="BCA" className="h-3 w-auto object-contain" />
+                  <img src="/images/banks/mandiri.svg" alt="Mandiri" className="h-3 w-auto object-contain" />
+                  <img src="/images/banks/gopay.svg" alt="GoPay" className="h-3 w-auto object-contain" />
+                  <img src="/images/banks/shopeepay.svg" alt="ShopeePay" className="h-3 w-auto object-contain" />
+                </div>
               </div>
 
               {/* Transfer Bank */}
@@ -497,11 +514,13 @@ export default function CheckoutPage() {
                       Transfer Bank Manual
                     </span>
                   </div>
-                  {paymentMethod === "BANK_TRANSFER" && <CheckCircle2 className="h-4 w-4 text-neutral-900" />}
+                  {paymentMethod === "BANK_TRANSFER" && <CheckCircle2 className="h-4 w-4 text-[#ed1c24]" />}
                 </div>
-                <p className="mt-1.5 text-xs text-neutral-600 font-['Roboto'] leading-relaxed">
-                  Transfer langsung ke rekening resmi PT Eugine Media Group (BCA / Mandiri).
-                </p>
+                <div className="mt-2 flex items-center space-x-2">
+                  <img src="/images/banks/bca.svg" alt="BCA" className="h-3.5 w-auto object-contain" />
+                  <img src="/images/banks/mandiri.svg" alt="Mandiri" className="h-3.5 w-auto object-contain" />
+                  <span className="text-[11px] text-neutral-500 font-semibold">Rekening Resmi PT EMG</span>
+                </div>
               </div>
             </div>
           </div>
