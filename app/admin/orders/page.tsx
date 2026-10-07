@@ -33,11 +33,19 @@ export default function AdminOrdersPage() {
   const [notifyWA, setNotifyWA] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
 
+  const [isUnauthorized, setIsUnauthorized] = useState(false);
+
   const loadOrders = async () => {
     setIsLoading(true);
+    setIsUnauthorized(false);
     try {
       const url = `/api/admin/orders?status=${statusFilter}${search ? `&q=${search}` : ""}`;
       const res = await fetch(url);
+      if (res.status === 401) {
+        setIsUnauthorized(true);
+        setIsLoading(false);
+        return;
+      }
       const data = await res.json();
       if (data.orders) setOrders(data.orders);
     } catch (err) {
@@ -137,6 +145,26 @@ export default function AdminOrdersPage() {
           <div className="p-16 flex flex-col items-center justify-center text-slate-400">
             <Loader2 className="w-8 h-8 animate-spin text-[#002c60] mb-2" />
             <span className="text-xs">Memuat pesanan...</span>
+          </div>
+        ) : isUnauthorized ? (
+          <div className="p-12 text-center bg-amber-50/60 space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">
+              <Clock className="w-6 h-6 text-amber-700" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-slate-900 font-['Archivo'] uppercase">
+                Sesi Administrator Diperlukan
+              </h3>
+              <p className="text-xs text-slate-500 max-w-md mx-auto mt-1">
+                Anda belum masuk sebagai Admin. Silakan login untuk mengelola daftar pesanan masuk dan memasukkan nomor resi ekspedisi.
+              </p>
+            </div>
+            <Link
+              href="/admin/login?redirect=/admin/orders"
+              className="inline-flex items-center px-5 py-2.5 rounded-lg bg-[#ed1c24] hover:bg-[#c90504] text-white font-['Archivo'] font-bold text-xs uppercase tracking-wider shadow-sm"
+            >
+              Login ke Admin EugineStore &rarr;
+            </Link>
           </div>
         ) : orders.length === 0 ? (
           <div className="p-16 text-center text-xs text-slate-400">Tidak ada pesanan ditemukan.</div>

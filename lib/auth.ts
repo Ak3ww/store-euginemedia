@@ -73,9 +73,45 @@ export function verifyAdminToken(token: string): AdminSession | null {
 
 export async function getAdminSession(): Promise<AdminSession | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value;
-  if (!token) return null;
-  return verifyAdminToken(token);
+  const adminToken = cookieStore.get(ADMIN_COOKIE_NAME)?.value;
+  if (adminToken) {
+    const verified = verifyAdminToken(adminToken);
+    if (verified) return verified;
+  }
+
+  // Also verify customer token if user logged in as customer with ADMIN / SUPERADMIN role
+  const customerToken = cookieStore.get(CUSTOMER_COOKIE_NAME)?.value;
+  if (customerToken) {
+    const cust = verifyCustomerToken(customerToken);
+    if (cust) {
+      if (cust.role === "ADMIN" || cust.role === "SUPERADMIN") {
+        return {
+          id: cust.id,
+          username: cust.phone,
+          email: cust.email || `${cust.phone}@store.euginemediagroup.com`,
+          name: cust.name,
+          role: cust.role,
+        };
+      }
+      try {
+        const dbCust = await prisma.customer.findUnique({
+          where: { id: cust.id },
+          select: { id: true, name: true, phone: true, email: true, role: true },
+        });
+        if (dbCust && (dbCust.role === "ADMIN" || dbCust.role === "SUPERADMIN")) {
+          return {
+            id: dbCust.id,
+            username: dbCust.phone,
+            email: dbCust.email || `${dbCust.phone}@store.euginemediagroup.com`,
+            name: dbCust.name,
+            role: dbCust.role,
+          };
+        }
+      } catch {}
+    }
+  }
+
+  return null;
 }
 
 export { CUSTOMER_COOKIE_NAME, ADMIN_COOKIE_NAME };

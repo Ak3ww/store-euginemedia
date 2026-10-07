@@ -13,16 +13,23 @@ import {
   ExternalLink
 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
+import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Header() {
   const router = useRouter();
   const itemCount = useCartStore((state) => state.getItemCount());
+  const { user, checkSession } = useAuthStore();
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdown, setServicesDropdown] = useState(false);
+
+  useEffect(() => {
+    checkSession();
+  }, [checkSession]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,14 +59,16 @@ export default function Header() {
               <span className="uppercase text-[11px] font-[500] tracking-wider">FIND LOCATION</span>
             </div>
 
-            {/* Login / My Account Button (#4b4242 background, 110px width, hover #ed1c24) */}
-            <div className="h-[33px] bg-[rgb(75,66,66)] px-5 flex items-center justify-center transition-colors">
+            {/* Login / My Account Button */}
+            <div className="h-[33px] bg-[rgb(75,66,66)] px-4 flex items-center justify-center transition-colors">
               <Link
-                href="/auth/signin"
-                className="text-white text-[12px] font-[400] tracking-wide hover:text-[#ed1c24] transition-colors flex items-center space-x-1"
+                href={user ? "/profile" : "/auth/signin"}
+                className="text-white text-[12px] font-[400] tracking-wide hover:text-[#ed1c24] transition-colors flex items-center space-x-1.5"
               >
-                <User className="h-3 w-3" />
-                <span>My Account</span>
+                <User className="h-3 w-3 text-[#ed1c24]" />
+                <span className="font-semibold truncate max-w-[120px]">
+                  {user ? (user.name || "Akun Saya") : "My Account"}
+                </span>
               </Link>
             </div>
           </div>

@@ -19,12 +19,19 @@ import {
 export default function AdminDashboardPage() {
   const [data, setData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUnauthorized, setIsUnauthorized] = useState(false);
 
   useEffect(() => {
     async function loadStats() {
       setIsLoading(true);
+      setIsUnauthorized(false);
       try {
         const res = await fetch("/api/admin/orders");
+        if (res.status === 401) {
+          setIsUnauthorized(true);
+          setIsLoading(false);
+          return;
+        }
         const json = await res.json();
         if (json.success) {
           setData(json);
@@ -43,6 +50,28 @@ export default function AdminDashboardPage() {
       <div className="min-h-[50vh] flex flex-col items-center justify-center text-neutral-400">
         <Loader2 className="w-8 h-8 animate-spin text-[#ed1c24] mb-2" />
         <span className="text-xs font-medium font-['Roboto']">Memuat metrik dashboard admin...</span>
+      </div>
+    );
+  }
+
+  if (isUnauthorized) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center text-center p-8 bg-white border border-neutral-200 rounded-2xl shadow-xs">
+        <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-3">
+          <Clock className="w-6 h-6" />
+        </div>
+        <h2 className="text-lg font-black text-neutral-900 font-['Archivo'] uppercase">
+          Sesi Admin Belum Masuk
+        </h2>
+        <p className="text-xs text-neutral-500 max-w-sm mt-1 mb-5 font-['Roboto']">
+          Silakan masuk menggunakan akun administrator EugineStore untuk melihat ringkasan omset dan mengelola pesanan.
+        </p>
+        <Link
+          href="/admin/login?redirect=/admin"
+          className="inline-flex items-center px-6 py-3 rounded-lg bg-[#ed1c24] hover:bg-[#c90504] text-white font-['Archivo'] font-bold text-xs uppercase tracking-wider shadow-sm transition-colors"
+        >
+          Masuk ke Admin Panel &rarr;
+        </Link>
       </div>
     );
   }

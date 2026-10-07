@@ -1,9 +1,10 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { MessageSquare, ArrowRight, Loader2, CheckCircle2, ShieldCheck, AlertCircle } from "lucide-react";
+import { useAuthStore } from "@/stores/authStore";
 
 export default function SignInPage() {
   return (
@@ -22,6 +23,7 @@ function SignInContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
+  const { setUser } = useAuthStore();
 
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
@@ -31,6 +33,13 @@ function SignInContent() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const otpInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (step === "OTP" && otpInputRef.current) {
+      otpInputRef.current.focus();
+    }
+  }, [step]);
 
   // Step 1: Send OTP to WhatsApp
   const handleSendOtp = async (e: React.FormEvent) => {
@@ -67,12 +76,13 @@ function SignInContent() {
     }
   };
 
-  // Step 2: Verify OTP
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Immediate Auto-Submit for 6-Digit OTP (No Manual Button Required)
+  const submitVerification = async (codeToVerify: string) => {
+    if (loading) return;
     setErrorMsg("");
 
-    if (otp.length !== 6) {
+    const cleanedCode = codeToVerify.replace(/\D/g, "").slice(0, 6);
+    if (cleanedCode.length !== 6) {
       setErrorMsg("Kode OTP harus terdiri dari 6 digit angka.");
       return;
     }
@@ -84,7 +94,7 @@ function SignInContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           phone: phone.replace(/\D/g, ""),
-          code: otp,
+          code: cleanedCode,
           name: name.trim() || undefined,
         }),
       });
@@ -92,12 +102,34 @@ function SignInContent() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Kode OTP salah atau kedaluwarsa.");
 
-      // Success -> Redirect to target checkout or home
-      router.push(redirectUrl);
+      // Sync customer profile into auth store
+      if (data.customer) {
+        setUser(data.customer);
+      }
+
+      // Hard redirect to force fresh session cookies and re-render header/cart/checkout
+      window.location.href = redirectUrl;
     } catch (err: any) {
       setErrorMsg(err.message || "Gagal memverifikasi OTP.");
-    } finally {
       setLoading(false);
+    }
+  };
+
+  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/\D/g, "").slice(0, 6);
+    setOtp(val);
+    if (val.length === 6) {
+      submitVerification(val);
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text");
+    const val = pastedData.replace(/\D/g, "").slice(0, 6);
+    setOtp(val);
+    if (val.length === 6) {
+      submitVerification(val);
     }
   };
 
@@ -115,7 +147,7 @@ function SignInContent() {
           <p className="mt-2 text-xs sm:text-sm text-neutral-600 font-['Roboto'] leading-relaxed">
             {step === "PHONE"
               ? "Masukkan nomor WhatsApp aktif Anda untuk login instan tanpa ribet mengingat password."
-              : `Masukkan 6-digit kode verifikasi yang kami kirimkan ke WhatsApp Anda.`}
+              : `Masukkan 6-digit kode verifikasi yang kami kirimkan ke WhatsApp Anda. Sistem akan login otomatis begitu 6 digit terisi.`}
           </p>
         </div>
 
@@ -185,49 +217,50 @@ function SignInContent() {
             </button>
           </form>
         ) : (
-          <form onSubmit={handleVerifyOtp} className="mt-6 space-y-4">
+          <div className="mt-6 space-y-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 font-['Archivo'] mb-1">
-                6-Digit Kode OTP *
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 font-['Archivo'] mb-1 text-center">
+                6-Digit Kode OTP
               </label>
               <input
+                ref={otpInputRef}
                 type="text"
-                required
+                inputMode="numeric"
+                autoComplete="one-time-code"
                 maxLength={6}
                 value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-                placeholder="123456"
-                className="w-full h-12 text-center text-xl tracking-[0.4em] font-black border border-neutral-300 rounded-[4px] focus:outline-none focus:border-neutral-900 font-['Archivo']"
+                onChange={handleOtpChange}
+                onPaste={handleOtpPaste}
+                placeholder="••••••"
+                disabled={loading}
+                className="w-full h-14 text-center text-2xl tracking-[0.4em] font-black border-2 border-neutral-300 rounded-[6px] focus:outline-none focus:border-[#ed1c24] font-['Archivo'] bg-neutral-50"
               />
+              <p className="mt-1.5 text-center text-[11px] text-neutral-400 font-['Roboto']">
+                {loading ? "Memverifikasi kode OTP..." : "Tempelkan kode OTP, sistem akan otomatis login tanpa tombol."}
+              </p>
+
               {debugOtp && (
-                <div className="mt-2 text-center">
+                <div className="mt-3 text-center">
                   <button
                     type="button"
-                    onClick={() => setOtp(debugOtp)}
-                    className="inline-flex items-center text-xs font-semibold text-[#ed1c24] hover:underline bg-red-50 px-2.5 py-1 rounded border border-red-100"
+                    onClick={() => {
+                      setOtp(debugOtp);
+                      submitVerification(debugOtp);
+                    }}
+                    className="inline-flex items-center text-xs font-semibold text-[#ed1c24] hover:underline bg-red-50 px-3 py-1.5 rounded border border-red-100"
                   >
-                    Tempel Kode Verifikasi: <strong className="ml-1 tracking-widest">{debugOtp}</strong>
+                    Tempel & Masuk Otomatis: <strong className="ml-1 tracking-widest">{debugOtp}</strong>
                   </button>
                 </div>
               )}
             </div>
 
-            <button
-              type="submit"
-              disabled={loading || otp.length !== 6}
-              className="flex h-[46px] w-full items-center justify-center space-x-2 rounded-[4px] bg-neutral-900 text-white font-['Archivo'] text-xs font-bold uppercase tracking-wider transition-all duration-200 hover:bg-[#ed1c24] active:scale-[0.99] disabled:opacity-50">
-              {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Memverifikasi...</span>
-                </>
-              ) : (
-                <>
-                  <CheckCircle2 className="h-4 w-4" />
-                  <span>Verifikasi & Lanjutkan</span>
-                </>
-              )}
-            </button>
+            {loading && (
+              <div className="flex h-11 w-full items-center justify-center space-x-2 rounded-[4px] bg-neutral-900 text-white font-['Archivo'] text-xs font-bold uppercase tracking-wider">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Memverifikasi & Masuk...</span>
+              </div>
+            )}
 
             <div className="text-center pt-2">
               <button
@@ -237,7 +270,7 @@ function SignInContent() {
                 Ganti Nomor WhatsApp
               </button>
             </div>
-          </form>
+          </div>
         )}
 
         <div className="mt-8 border-t border-neutral-100 pt-4 text-center">

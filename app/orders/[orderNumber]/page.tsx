@@ -29,6 +29,11 @@ export default function OrderTrackingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState<string | null>(null);
 
+  // Live tracking modal via RapidAPI
+  const [trackingModalOpen, setTrackingModalOpen] = useState(false);
+  const [trackingResult, setTrackingResult] = useState<any>(null);
+  const [trackingLoading, setTrackingLoading] = useState(false);
+
   useEffect(() => {
     if (!orderNumber) return;
     let isMounted = true;
@@ -66,6 +71,23 @@ export default function OrderTrackingPage() {
     navigator.clipboard.writeText(text);
     setCopied(label);
     setTimeout(() => setCopied(null), 2000);
+  };
+
+  const handleCheckResi = async () => {
+    if (!order?.trackingNumber) return;
+    setTrackingLoading(true);
+    setTrackingModalOpen(true);
+    try {
+      const res = await fetch(
+        `/api/shipping/track?courier=${order.courier || "jne"}&trackingNumber=${order.trackingNumber}`
+      );
+      const data = await res.json();
+      setTrackingResult(data);
+    } catch {
+      setTrackingResult({ success: false, message: "Gagal memuat status pelacakan resi" });
+    } finally {
+      setTrackingLoading(false);
+    }
   };
 
   if (isLoading) {
@@ -264,6 +286,22 @@ export default function OrderTrackingPage() {
               <h4 className="font-bold text-slate-900 mb-1">Kurir & Layanan:</h4>
               <div className="text-slate-700 font-semibold">{order.courier} — {order.courierService}</div>
               <div className="text-slate-500 mt-1">Total Berat: {order.totalWeight} gram ({(order.totalWeight / 1000).toFixed(1)} kg)</div>
+              {order.trackingNumber && (
+                <div className="mt-3 p-3 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">No. Resi Pengiriman</span>
+                      <span className="font-mono font-bold text-slate-900 text-xs">{order.trackingNumber}</span>
+                    </div>
+                    <button
+                      onClick={handleCheckResi}
+                      className="px-3 py-1 rounded bg-[#ed1c24] hover:bg-[#c90504] text-white text-[11px] font-['Archivo'] font-bold uppercase tracking-wider transition-colors shadow-xs"
+                    >
+                      Lacak Paket
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -300,6 +338,76 @@ export default function OrderTrackingPage() {
           </div>
         </div>
       </div>
+
+      {/* Live Resi Tracking Dialog */}
+      {trackingModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <Truck className="w-5 h-5 text-[#ed1c24]" />
+                <h3 className="font-['Archivo'] font-bold text-sm uppercase text-slate-900">
+                  Lacak Pengiriman ({order.courier})
+                </h3>
+              </div>
+              <button
+                onClick={() => setTrackingModalOpen(false)}
+                className="text-slate-400 hover:text-slate-700 text-sm font-bold p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between p-3 rounded-lg bg-slate-50 border border-slate-100">
+                <span className="text-slate-500">Nomor Resi:</span>
+                <span className="font-mono font-bold text-slate-900">{order.trackingNumber}</span>
+              </div>
+
+              {trackingLoading ? (
+                <div className="p-8 text-center text-slate-400">
+                  <Loader2 className="w-6 h-6 animate-spin text-[#ed1c24] mx-auto mb-2" />
+                  <span>Menghubungkan ke server pelacakan kurir...</span>
+                </div>
+              ) : trackingResult ? (
+                <div className="space-y-3">
+                  {trackingResult.results?.status || trackingResult.results?.summary ? (
+                    <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-100 text-emerald-800 font-semibold">
+                      Status: {trackingResult.results?.status || trackingResult.results?.summary?.status || "Dalam Perjalanan"}
+                    </div>
+                  ) : null}
+
+                  {trackingResult.results?.history && trackingResult.results.history.length > 0 ? (
+                    <div className="max-h-60 overflow-y-auto space-y-2 divide-y divide-slate-100">
+                      {trackingResult.results.history.map((h: any, i: number) => (
+                        <div key={i} className="pt-2 text-[11px]">
+                          <div className="font-semibold text-slate-800">{h.desc || h.description || h.message}</div>
+                          <div className="text-[10px] text-slate-400">{h.date || h.time} {h.location ? `— ${h.location}` : ""}</div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="p-4 text-center text-slate-500 bg-slate-50 rounded-lg">
+                      {trackingResult.message || "Data perjalanan paket belum diperbarui oleh pihak ekspedisi atau nomor resi baru diterbitkan."}
+                    </div>
+                  )}
+                </div>
+              ) : null}
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setTrackingModalOpen(false)}
+                className="text-xs"
+              >
+                Tutup
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   </div>
   );

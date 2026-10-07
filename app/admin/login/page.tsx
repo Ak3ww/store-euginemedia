@@ -1,18 +1,40 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Lock, User, ArrowRight, Loader2, AlertCircle } from "lucide-react";
+import React, { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Lock, User, ArrowRight, Loader2, AlertCircle, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function AdminLoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[70vh] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-[#ed1c24]" />
+        </div>
+      }
+    >
+      <AdminLoginForm />
+    </Suspense>
+  );
+}
+
+function AdminLoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect") || "/admin";
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const fillDefaultCredentials = () => {
+    setUsername("admin");
+    setPassword("EugineStore2026!");
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +56,8 @@ export default function AdminLoginPage() {
         return;
       }
 
-      router.push("/admin");
+      // Hard navigation to ensure admin cookie is transmitted to all Server Components & APIs
+      window.location.href = redirectUrl;
     } catch (err: any) {
       setIsLoading(false);
       setErrorMsg("Terjadi kesalahan saat login");
@@ -70,7 +93,7 @@ export default function AdminLoginPage() {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="admin@euginemediagroup.com"
+                placeholder="admin atau admin@euginemediagroup.com"
                 className="pl-9 h-10 text-xs border-slate-200 rounded-lg"
               />
             </div>
@@ -89,6 +112,18 @@ export default function AdminLoginPage() {
                 className="pl-9 h-10 text-xs border-slate-200 rounded-lg"
               />
             </div>
+          </div>
+
+          {/* Quick-fill helper */}
+          <div className="text-center pt-1">
+            <button
+              type="button"
+              onClick={fillDefaultCredentials}
+              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 hover:text-[#ed1c24] transition-colors"
+            >
+              <KeyRound className="w-3 h-3 text-[#ed1c24]" />
+              Isi Akun Default (admin / EugineStore2026!)
+            </button>
           </div>
 
           <Button
