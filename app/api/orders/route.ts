@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCustomerSession } from "@/lib/auth";
 import { CreateOrderSchema } from "@/lib/security";
-import { createQrinClient } from "@/lib/qrin";
+import { createOrderQris } from "@/lib/qrin";
 import { sendOrderNotificationWhatsApp } from "@/lib/whatsapp";
 
 export async function POST(req: NextRequest) {
@@ -113,31 +113,17 @@ export async function POST(req: NextRequest) {
     let qrisInvoiceId: string | null = null;
 
     if (paymentMethod === "QRIS") {
-      const tokenQrin = process.env.QRIN_TOKEN;
-      if (tokenQrin) {
-        try {
-          const qrin = createQrinClient(tokenQrin);
-          const qrinRes = await qrin.createTransaction("QRIS", {
-            no_ref_merchant: orderNumber,
-            amount_value: totalAmount,
-            amount_currency: "IDR",
-            product_details: JSON.stringify(notificationItems),
-            validity: "120", // 2 hours
-            additional_info: {
-              customer_name: customerName,
-              customer_phone: customerPhone,
-              customer_email: customerEmail || undefined,
-            },
-          });
+      const qrisResult = await createOrderQris({
+        orderNumber,
+        totalAmount,
+        customerName,
+        customerPhone,
+        customerEmail: customerEmail || undefined,
+        productNames: notificationItems.map((it) => `${it.name} (x${it.quantity})`),
+      });
 
-          if (qrinRes && qrinRes.status === "success" && qrinRes.data) {
-            qrisString = qrinRes.data.qr_string || qrinRes.data.qris_string;
-            qrisInvoiceId = qrinRes.data.invoice_id || qrinRes.data.id;
-          }
-        } catch (qrinErr) {
-          console.warn("[QRIN Create Error]:", qrinErr);
-        }
-      }
+      qrisString = qrisResult.qrisString;
+      qrisInvoiceId = qrisResult.invoiceId;
     }
 
     // 5. Create Order in Database (with atomic stock deduction)

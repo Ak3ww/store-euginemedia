@@ -31,21 +31,35 @@ export default function OrderTrackingPage() {
 
   useEffect(() => {
     if (!orderNumber) return;
-    async function loadOrder() {
-      setIsLoading(true);
+    let isMounted = true;
+    let timer: NodeJS.Timeout | null = null;
+
+    async function loadOrder(showLoader = false) {
+      if (showLoader) setIsLoading(true);
       try {
         const res = await fetch(`/api/orders/${orderNumber}`);
         const data = await res.json();
-        if (data.order) {
+        if (isMounted && data.order) {
           setOrder(data.order);
+          // Auto poll if order is still pending to reflect payment immediately
+          if (data.order.status === "PENDING") {
+            timer = setTimeout(() => loadOrder(false), 5000);
+          }
         }
       } catch (err) {
         console.error("Error loading order:", err);
       } finally {
-        setIsLoading(false);
+        if (isMounted && showLoader) {
+          setIsLoading(false);
+        }
       }
     }
-    loadOrder();
+    loadOrder(true);
+
+    return () => {
+      isMounted = false;
+      if (timer) clearTimeout(timer);
+    };
   }, [orderNumber]);
 
   const copyToClipboard = (text: string, label: string) => {
@@ -163,18 +177,27 @@ export default function OrderTrackingPage() {
                 <h3 className="text-sm font-bold text-slate-900">Pindai QRIS untuk Pembayaran Otomatis</h3>
 
                 {order.qrisString ? (
-                  <div className="p-4 bg-white border-2 border-dashed border-slate-300 rounded-xl inline-block shadow-sm">
+                  <div className="p-4 bg-white border-2 border-slate-900 rounded-xl inline-block shadow-md">
+                    <div className="mb-2 flex items-center justify-between gap-3 border-b border-slate-100 pb-2 px-1">
+                      <img src="/images/banks/qris.svg" alt="QRIS" className="h-4 object-contain" />
+                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                        {order.qrisInvoiceId ? `NMID: ${order.qrisInvoiceId}` : "Standar Nasional"}
+                      </span>
+                    </div>
                     {/* QR Code image via standard API */}
                     <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(
-                        order.qrisString
-                      )}`}
+                      src={
+                        order.qrisString.startsWith("http")
+                          ? order.qrisString
+                          : `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(
+                              order.qrisString
+                            )}`
+                      }
                       alt="QRIS Barcode"
                       className="w-56 h-56 mx-auto object-contain"
                     />
-                    <div className="mt-2 flex items-center justify-center gap-1.5">
-                      <img src="/images/banks/qris.svg" alt="QRIS" className="h-4 object-contain" />
-                      <span className="text-[10px] text-slate-400 font-semibold">NMID Standar Nasional</span>
+                    <div className="mt-2 text-center text-[11px] font-semibold text-slate-700">
+                      PT EUGINE MEDIA GROUP
                     </div>
                   </div>
                 ) : (

@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createQrinClient } from "@/lib/qrin";
+import { getQrinToken, createQrinClient } from "@/lib/qrin";
 import { sendWhatsAppMessage } from "@/lib/whatsapp";
 
 /**
  * Payment Gateway Webhook Receiver (QRIN / Midtrans Style)
  * URL: https://store.euginemediagroup.com/api/payment/callback
+ * Also aliased at: /handle-qrin
  */
 export async function POST(req: NextRequest) {
   try {
     const rawBody = await req.text();
     const signature = req.headers.get("x-callback-signature") || req.headers.get("x-signature") || "";
 
-    const tokenQrin = process.env.QRIN_TOKEN || "";
-    if (tokenQrin) {
+    const tokenQrin = getQrinToken();
+    if (tokenQrin && signature) {
       const qrin = createQrinClient(tokenQrin);
       const isVerified = qrin.verifyCallbackSignature(rawBody, signature);
       if (!isVerified && process.env.NODE_ENV === "production") {
