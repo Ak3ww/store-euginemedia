@@ -135,12 +135,6 @@ export default function OrderTrackingPage() {
         <Link href="/" className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-[#ed1c24]">
           <ArrowLeft className="w-4 h-4" /> Kembali Belanja
         </Link>
-        <button
-          onClick={() => window.print()}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-700 transition-colors"
-        >
-          <Printer className="w-3.5 h-3.5" /> Cetak Invoice
-        </button>
       </div>
 
       {/* Main Order Card */}

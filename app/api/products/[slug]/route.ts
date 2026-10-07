@@ -52,8 +52,16 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ slug
       return NextResponse.json({ error: parsed.error.issues[0]?.message || "Data produk tidak valid" }, { status: 400 });
     }
 
+    const existing = await prisma.product.findFirst({
+      where: { OR: [{ id: slug }, { slug }] },
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: "Produk tidak ditemukan" }, { status: 404 });
+    }
+
     const updated = await prisma.product.update({
-      where: { id: slug },
+      where: { id: existing.id },
       data: parsed.data as any,
       include: { category: true },
     });
@@ -73,8 +81,16 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ s
     }
 
     const { slug } = await params;
+    const existing = await prisma.product.findFirst({
+      where: { OR: [{ id: slug }, { slug }] },
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: "Produk tidak ditemukan" }, { status: 404 });
+    }
+
     await prisma.product.update({
-      where: { id: slug },
+      where: { id: existing.id },
       data: { isActive: false },
     });
 

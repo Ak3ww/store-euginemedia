@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAdminSession } from "@/lib/auth";
-import { sendShippingResiWhatsApp } from "@/lib/whatsapp";
+import { sendShippingResiWhatsApp, sendWhatsAppMessage } from "@/lib/whatsapp";
 import { z } from "zod";
 
 const UpdateOrderStatusSchema = z.object({
@@ -50,7 +50,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       data: updateData,
     });
 
-    // If shipped and trackingNumber present and notifyWhatsApp is true -> send WA notification
+    // Send automated WhatsApp notifications
+    if (status === "PAID" && notifyWhatsApp) {
+      const waMsg = `*PEMBAYARAN TERVERIFIKASI* ✅\n\nHalo *${updated.customerName}*,\nPembayaran sebesar *Rp ${updated.totalAmount.toLocaleString("id-ID")}* untuk pesanan *${updated.orderNumber}* telah kami verifikasi.\n\nPesanan Anda sekarang sedang dipersiapkan oleh tim logistik EugineStore.\n\nTerima kasih telah berbelanja di EugineStore!`;
+      sendWhatsAppMessage(updated.customerPhone, waMsg).catch((err) => console.warn("[WA Paid Alert Error]:", err));
+    }
+
     if (status === "SHIPPED" && trackingNumber && notifyWhatsApp) {
       sendShippingResiWhatsApp({
         phone: updated.customerPhone,
