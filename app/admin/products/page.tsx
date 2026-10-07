@@ -184,7 +184,7 @@ export default function AdminProductsPage() {
           <p className="text-xs text-slate-500">Kelola daftar perangkat, stok, harga, dan tautan marketplace resmi</p>
         </div>
 
-        <Button onClick={openCreateModal} className="bg-[#002c60] hover:bg-[#001f44] text-white text-xs font-semibold">
+        <Button onClick={openCreateModal} className="bg-[#ed1c24] hover:bg-[#c90504] text-white text-xs font-['Archivo'] font-bold uppercase tracking-wider shadow-xs">
           <Plus className="w-4 h-4 mr-1.5" /> Tambah Produk Baru
         </Button>
       </div>
@@ -206,7 +206,7 @@ export default function AdminProductsPage() {
       <div className="rounded-2xl border border-slate-200 bg-white shadow-xs overflow-hidden">
         {isLoading ? (
           <div className="p-16 flex flex-col items-center justify-center text-slate-400">
-            <Loader2 className="w-8 h-8 animate-spin text-[#002c60] mb-2" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#ed1c24] mb-2" />
             <span className="text-xs">Memuat katalog...</span>
           </div>
         ) : filtered.length === 0 ? (
@@ -248,7 +248,7 @@ export default function AdminProductsPage() {
                         {prod.category?.name || "-"}
                       </span>
                     </td>
-                    <td className="py-3 px-4 font-extrabold text-[#002c60]">Rp {prod.price.toLocaleString("id-ID")}</td>
+                    <td className="py-3 px-4 font-black font-['Archivo'] text-neutral-900">Rp {prod.price.toLocaleString("id-ID")}</td>
                     <td className="py-3 px-4 font-medium">{prod.weight}g</td>
                     <td className="py-3 px-4">
                       <span
@@ -288,7 +288,7 @@ export default function AdminProductsPage() {
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => openEditModal(prod)}
-                          className="p-1.5 rounded-md hover:bg-slate-100 text-slate-600 hover:text-[#002c60] transition-colors"
+                          className="p-1.5 rounded-md hover:bg-neutral-100 text-neutral-600 hover:text-[#ed1c24] transition-colors"
                           title="Edit Produk"
                         >
                           <Edit className="w-4 h-4" />
@@ -470,7 +470,7 @@ export default function AdminProductsPage() {
               <Button
                 type="submit"
                 disabled={isSaving}
-                className="bg-[#002c60] hover:bg-[#001f44] text-white text-xs font-semibold"
+                className="bg-[#ed1c24] hover:bg-[#c90504] text-white text-xs font-['Archivo'] font-bold uppercase tracking-wider shadow-xs"
               >
                 {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-1.5" /> : null}
                 {editingProduct ? "Simpan Perubahan" : "Tambahkan Produk"}

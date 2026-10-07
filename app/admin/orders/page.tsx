@@ -107,10 +107,10 @@ export default function AdminOrdersPage() {
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+              className={`px-3.5 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider font-['Archivo'] whitespace-nowrap transition-all ${
                 statusFilter === st
-                  ? "bg-[#002c60] text-white shadow-xs"
-                  : "bg-white border border-slate-200 text-slate-600 hover:border-slate-300"
+                  ? "bg-[#ed1c24] text-white shadow-xs"
+                  : "bg-white border border-neutral-300 text-neutral-700 hover:border-black"
               }`}
             >
               {st}
@@ -280,10 +280,10 @@ export default function AdminOrdersPage() {
                 <Button
                   type="submit"
                   disabled={isUpdating}
-                  className="bg-[#002c60] hover:bg-[#001f44] text-white text-xs font-semibold"
+                  className="bg-[#ed1c24] hover:bg-[#c90504] text-white text-xs font-['Archivo'] font-bold uppercase tracking-wider shadow-xs"
                 >
                   {isUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : null}
-                  Simpan Status
+                  Simpan Status & Kirim Resi
                 </Button>
               </div>
             </form>

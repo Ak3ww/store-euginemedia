@@ -45,10 +45,12 @@ export default function AdminLoginPage() {
     <div className="min-h-[70vh] flex items-center justify-center py-12 px-4">
       <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-8 shadow-lg">
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-xl bg-[#002c60] text-white flex items-center justify-center font-bold text-lg mx-auto mb-3 shadow-md">
+          <div className="w-12 h-12 rounded-xl bg-[#ed1c24] text-white flex items-center justify-center font-black font-['Archivo'] text-lg mx-auto mb-3 shadow-md">
             ES
           </div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Admin EugineStore</h1>
+          <h1 className="text-xl font-black text-neutral-900 tracking-tight font-['Archivo'] uppercase">
+            Admin EugineStore
+          </h1>
           <p className="text-xs text-slate-400 mt-1">Masuk untuk mengelola katalog, pesanan & pengiriman</p>
         </div>
 
@@ -92,7 +94,7 @@ export default function AdminLoginPage() {
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full h-10 bg-[#002c60] hover:bg-[#001f44] text-white font-bold text-xs rounded-lg shadow-sm"
+            className="w-full h-11 bg-[#ed1c24] hover:bg-[#c90504] text-white font-['Archivo'] font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm"
           >
             {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : "Masuk ke Dashboard"}
           </Button>

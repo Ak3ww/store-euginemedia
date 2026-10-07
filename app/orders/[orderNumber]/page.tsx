@@ -57,7 +57,7 @@ export default function OrderTrackingPage() {
   if (isLoading) {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center text-slate-400">
-        <Loader2 className="w-8 h-8 animate-spin text-[#002c60] mb-2" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#ed1c24] mb-2" />
         <span className="text-xs font-medium">Memuat detail pesanan {orderNumber}...</span>
       </div>
     );
@@ -96,25 +96,25 @@ export default function OrderTrackingPage() {
       <div className="max-w-4xl mx-auto px-4 space-y-8">
       {/* Top Breadcrumb & Actions */}
       <div className="flex items-center justify-between">
-        <Link href="/" className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-[#002c60]">
+        <Link href="/" className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-[#ed1c24]">
           <ArrowLeft className="w-4 h-4" /> Kembali Belanja
         </Link>
         <button
           onClick={() => window.print()}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-700 transition-colors"
         >
           <Printer className="w-3.5 h-3.5" /> Cetak Invoice
         </button>
       </div>
 
       {/* Main Order Card */}
-      <div className="rounded-2xl border border-slate-200 bg-white shadow-xs overflow-hidden">
+      <div className="rounded-2xl border border-neutral-200 bg-white shadow-xs overflow-hidden">
         {/* Header Banner */}
-        <div className="bg-[#002c60] text-white p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="bg-[#1f1f1f] text-white p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-[#ed1c24]">
           <div>
-            <div className="text-xs text-slate-300 font-medium mb-1">Status Transaksi</div>
-            <div className="text-xl sm:text-2xl font-extrabold tracking-tight">{order.orderNumber}</div>
-            <div className="text-xs text-slate-300 mt-1">
+            <div className="text-xs text-neutral-400 font-medium mb-1 font-['Archivo'] uppercase">Status Transaksi</div>
+            <div className="text-xl sm:text-2xl font-black tracking-tight font-['Archivo']">{order.orderNumber}</div>
+            <div className="text-xs text-neutral-400 mt-1 font-['Roboto']">
               Dibuat pada: {new Date(order.createdAt).toLocaleString("id-ID")}
             </div>
           </div>
@@ -194,7 +194,7 @@ export default function OrderTrackingPage() {
                   <div className="p-3 rounded-lg bg-white border border-slate-200 flex items-center justify-between">
                     <div>
                       <div className="font-bold text-slate-800">Bank BCA</div>
-                      <div className="font-mono text-sm text-[#002c60] font-bold">1234-5678-90</div>
+                      <div className="font-mono text-sm text-neutral-900 font-bold">1234-5678-90</div>
                       <div className="text-[11px] text-slate-400">a/n PT Eugine Media Group</div>
                     </div>
                     <button
@@ -208,7 +208,7 @@ export default function OrderTrackingPage() {
                   <div className="p-3 rounded-lg bg-white border border-slate-200 flex items-center justify-between">
                     <div>
                       <div className="font-bold text-slate-800">Bank Mandiri</div>
-                      <div className="font-mono text-sm text-[#002c60] font-bold">133-00-1234567-8</div>
+                      <div className="font-mono text-sm text-neutral-900 font-bold">133-00-1234567-8</div>
                       <div className="text-[11px] text-slate-400">a/n PT Eugine Media Group</div>
                     </div>
                     <button
@@ -270,9 +270,9 @@ export default function OrderTrackingPage() {
               <span>Ongkos Kirim</span>
               <span className="font-semibold text-slate-700">Rp {order.shippingCost.toLocaleString("id-ID")}</span>
             </div>
-            <div className="flex justify-between text-base font-extrabold text-slate-900 pt-2 border-t border-slate-200">
-              <span>Total Tagihan</span>
-              <span className="text-[#002c60]">Rp {order.totalAmount.toLocaleString("id-ID")}</span>
+            <div className="flex justify-between text-base font-extrabold text-neutral-900 pt-2 border-t border-neutral-200">
+              <span className="font-['Archivo'] uppercase">Total Tagihan</span>
+              <span className="text-[#ed1c24] font-black font-['Archivo'] text-lg">Rp {order.totalAmount.toLocaleString("id-ID")}</span>
             </div>
           </div>
         </div>
