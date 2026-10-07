@@ -92,3 +92,30 @@ export async function trackOrderResi(courier: string, trackingNumber: string) {
     };
   }
 }
+
+export async function calculateShippingCostRapidApi(
+  originAreaId: number = 12560, // Default origin: Cibinong, Kab. Bogor
+  destinationAreaId: number,
+  weightInKg: number
+) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/shipping-cost?originAreaId=${originAreaId}&destinationAreaId=${destinationAreaId}&weight=${Math.max(
+        1,
+        weightInKg
+      )}`,
+      {
+        headers: {
+          "x-rapidapi-host": RAPIDAPI_HOST,
+          "x-rapidapi-key": RAPIDAPI_KEY,
+        },
+        cache: "no-store",
+      }
+    );
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("[RapidAPI Shipping Cost Error]:", error);
+    return null;
+  }
+}

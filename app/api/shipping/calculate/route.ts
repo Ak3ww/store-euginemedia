@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { searchAreaAutocomplete, calculateShippingCostRapidApi } from "@/lib/shipping-api";
 
 const ShippingCalcSchema = z.object({
   weightInGrams: z.number().positive(),
@@ -34,6 +35,36 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(cached.data);
     }
 
+    // Attempt live area autocomplete via RapidAPI for destination accuracy
+    let liveOptions: any[] | null = null;
+    try {
+      const searchTarget = district || city;
+      if (searchTarget) {
+        const auto = await searchAreaAutocomplete(searchTarget);
+        if (auto?.success && auto?.results?.length > 0) {
+          const destAreaId = parseInt(auto.results[0].value);
+          if (!isNaN(destAreaId)) {
+            const liveRates = await calculateShippingCostRapidApi(12560, destAreaId, weightInKg);
+            if (liveRates?.success && Array.isArray(liveRates?.results) && liveRates.results.length > 0) {
+              liveOptions = liveRates.results.map((r: any) => ({
+                courier: (r.logistic_name || r.name || "Kurir").toUpperCase(),
+                service: r.service_name || r.service || "Standard",
+                etd: r.etd ? `${r.etd} Hari` : "1-3 Hari",
+                cost: r.tariff || r.cost || r.price,
+                logo: (r.logistic_name || "").toLowerCase().includes("jne")
+                  ? "/images/couriers/jne.svg"
+                  : (r.logistic_name || "").toLowerCase().includes("sicepat")
+                  ? "/images/couriers/sicepat.svg"
+                  : "/images/couriers/jnt.svg",
+              }));
+            }
+          }
+        }
+      }
+    } catch (e) {
+      // Graceful fallback to formula
+    }
+
     // Dynamic base pricing rate multiplier depending on destination region (Jabodetabek vs Pulau Jawa vs Luar Jawa)
     const lowerProv = province.toLowerCase();
     const lowerCity = city.toLowerCase();
@@ -59,7 +90,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Shipping Services (JNE, J&T, SiCepat)
-    const options = [
+    const options = liveOptions && liveOptions.length > 0 ? liveOptions : [
       {
         courier: "JNE",
         service: "REG (Reguler)",
