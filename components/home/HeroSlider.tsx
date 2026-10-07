@@ -4,27 +4,35 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+// 4 Original Cricket-Weapon Slides & Exact Texts
 const slides = [
   {
-    image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=1920&auto=format&fit=crop",
-    quote: "Unleash Your High-Speed Network Connectivity and Power the Digital Future",
-    saleText: "Get in the game with up to 35% off on MikroTik, Fiberhome ONT & Gigabit Switch",
+    image: "/images/cricket-weapon/img2.png",
+    quote: "Unleash Your Passion for Cricket and Embrace the Thrill of the Game",
+    saleText: "Get in the game with up to 50% off on a wide range of cricket gear's",
     productText: "Shop Now",
     link: "/products",
   },
   {
-    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1920&auto=format&fit=crop",
-    quote: "Experience the Unparalleled Excitement and Secure Your Premises with Smart CCTV",
-    saleText: "Limited Time Offer: High-definition security cameras & 24/7 recording systems",
+    image: "/images/cricket-weapon/03.jpg",
+    quote: "Experience the Unparalleled Excitement and Achieve Victory with Our Premium Cricket Equipment",
+    saleText: "Limited Time Offer: Don't miss out on the opportunity to upgrade your game",
     productText: "Buy Now",
-    link: "/products?category=cctv",
+    link: "/products",
   },
   {
-    image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=1920&auto=format&fit=crop",
-    quote: "Gear up with the Latest Hardware Innovations and Elevate Enterprise Performance",
-    saleText: "Discover New Arrivals in official IT Hardware & certified networking tools",
-    productText: "Explore Now",
-    link: "/products?category=hardware",
+    image: "/images/cricket-weapon/01.jpg",
+    quote: "Gear up with the Latest Innovations and Dominate the Field like Never Before",
+    saleText: "Discover New Arrivals and stay ahead of the competition",
+    productText: "Explore",
+    link: "/products",
+  },
+  {
+    image: "/images/cricket-weapon/04.jpg",
+    quote: "Elevate Your Performance and Unleash Your True Cricketing Potential with Our Cutting-Edge Gear",
+    saleText: "New Arrivals: Enhance your skills and excel on the field",
+    productText: "Upgrade Now",
+    link: "/products",
   },
 ];
 
@@ -61,10 +69,10 @@ export default function HeroSlider() {
             <img
               src={slide.image}
               alt={slide.quote}
-              className="w-full h-full object-cover object-center filter brightness-[0.65]"
+              className="w-full h-full object-cover object-center filter brightness-[0.70]"
             />
 
-            {/* Dark gradient for contrast */}
+            {/* Dark gradient overlay for text readability */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
 
             {/* Slide Content 1:1 Cricket-Weapon */}
@@ -92,7 +100,7 @@ export default function HeroSlider() {
       <button
         onClick={handleBack}
         className="absolute left-0 top-0 bottom-0 z-20 w-12 bg-[#00000088] text-white flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity"
-        title="Sebelumnya"
+        title="Previous Slide"
       >
         <ChevronLeft className="h-8 w-8" />
       </button>
@@ -100,7 +108,7 @@ export default function HeroSlider() {
       <button
         onClick={handleNext}
         className="absolute right-0 top-0 bottom-0 z-20 w-12 bg-[#00000088] text-white flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity"
-        title="Berikutnya"
+        title="Next Slide"
       >
         <ChevronRight className="h-8 w-8" />
       </button>

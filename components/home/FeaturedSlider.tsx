@@ -9,7 +9,7 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import "./FeatureSlider.css";
 
-interface FeaturedProduct {
+interface ProductItem {
   id: string;
   name: string;
   price: number;
@@ -17,59 +17,61 @@ interface FeaturedProduct {
   image: string;
 }
 
-const FEATURED_PRODUCTS: FeaturedProduct[] = [
+const DEFAULT_FEATURED: ProductItem[] = [
   {
-    id: "ftth-ont-gpon-hg680",
-    name: "Modem ONT GPON Fiberhome Dual Band Gigabit",
-    price: 245000,
-    originalPrice: 285000,
-    image: "/images/products/ont-router.png",
+    id: "cw-bat-kookaburra-ghost",
+    name: "Kookaburra Ghost Pro Cricket Bat 2024",
+    price: 3850000,
+    originalPrice: 4500000,
+    image: "/images/products/IMG-20230731-WA0015.jpg",
   },
   {
-    id: "mikrotik-rb750gr3-hex",
-    name: "MikroTik RB750Gr3 hEX Gigabit Routerboard",
-    price: 890000,
+    id: "cw-bat-ss-ton-gladiator",
+    name: "SS TON Gladiator English Willow Cricket Bat",
+    price: 4950000,
+    originalPrice: 5800000,
+    image: "/images/products/IMG-20230731-WA0016.jpg",
+  },
+  {
+    id: "cw-pads-mrf-grand-edition",
+    name: "MRF Grand Edition Batting Legguard Pads",
+    price: 1450000,
+    originalPrice: 1750000,
+    image: "/images/products/IMG-20230731-WA0021.jpg",
+  },
+  {
+    id: "cw-gloves-sg-savage-pro",
+    name: "SG Savage Pro Batting Gloves Leather Palm",
+    price: 780000,
     originalPrice: 950000,
-    image: "/images/products/mikrotik-hex.png",
+    image: "/images/products/IMG-20230731-WA0030.jpg",
   },
   {
-    id: "dropcore-1-core-1000m",
-    name: "Kabel Fiber Optik Dropcore 1 Core 3 SEL 1000M",
-    price: 365000,
-    originalPrice: 420000,
-    image: "/images/products/dropcore-cable.png",
+    id: "cw-helmet-shrey-masterclass",
+    name: "Shrey Masterclass AIR Cricket Helmet Titanium",
+    price: 2150000,
+    originalPrice: 2500000,
+    image: "/images/products/IMG-20230731-WA0045.jpg",
   },
   {
-    id: "cctv-hikvision-colorvu-2mp",
-    name: "Hikvision ColorVu 2MP Full Time Color Outdoor",
-    price: 385000,
-    originalPrice: 450000,
-    image: "/images/products/cctv-dome.png",
-  },
-  {
-    id: "fusion-splicer-ai9",
-    name: "Signalfire AI-9 Fusion Splicer Optical Fiber",
-    price: 11500000,
-    originalPrice: 12800000,
-    image: "/images/products/splicer-machine.png",
-  },
-  {
-    id: "kaos-polo-eugine-engineer",
-    name: "Official Eugine Media Field Engineer Polo Shirt",
-    price: 125000,
-    originalPrice: 150000,
-    image: "/images/products/polo-shirt.png",
+    id: "cw-kitbag-kookaburra-pro",
+    name: "Kookaburra Pro Wheelie Cricket Kitbag Large",
+    price: 1850000,
+    originalPrice: 2200000,
+    image: "/images/products/IMG-20230731-WA0054.jpg",
   },
 ];
 
-export default function FeaturedSlider() {
+export default function FeaturedSlider({ products }: { products?: ProductItem[] }) {
+  const displayProducts = products && products.length > 0 ? products : DEFAULT_FEATURED;
+
   return (
-    <div className="w-full py-8">
+    <div className="w-full py-4">
       <Swiper
         modules={[EffectCoverflow, Pagination, A11y, Autoplay]}
         loop={true}
-        speed={500}
-        spaceBetween={50}
+        speed={600}
+        spaceBetween={40}
         slidesPerView={"auto"}
         pagination={{ clickable: true }}
         effect={"coverflow"}
@@ -77,8 +79,8 @@ export default function FeaturedSlider() {
         coverflowEffect={{
           rotate: 0,
           stretch: 10,
-          depth: 50,
-          modifier: 3,
+          depth: 60,
+          modifier: 2.5,
           slideShadows: false,
         }}
         autoplay={{
@@ -86,18 +88,18 @@ export default function FeaturedSlider() {
           disableOnInteraction: false,
         }}
         breakpoints={{
-          768: {
+          640: {
             slidesPerView: 2,
-            spaceBetween: 80,
+            spaceBetween: 60,
           },
-          992: {
+          1024: {
             slidesPerView: 3,
-            spaceBetween: 100,
+            spaceBetween: 80,
           },
         }}
         className="featured_swiper"
       >
-        {FEATURED_PRODUCTS.map((product) => {
+        {displayProducts.map((product) => {
           const formattedPrice = `Rp ${product.price.toLocaleString("id-ID")}`;
           const formattedOldPrice = product.originalPrice
             ? `Rp ${product.originalPrice.toLocaleString("id-ID")}`
@@ -107,9 +109,16 @@ export default function FeaturedSlider() {
             <SwiperSlide key={product.id} className="featured_slides">
               <Link
                 href={`/products/${product.id}`}
-                style={{ textDecoration: "none", color: "inherit", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
               >
-                {/* 1. Judul Produk DI ATAS Foto (Exact Cricket-Weapon) */}
+                {/* 1. Judul Produk DI ATAS Foto (Exact Cricket-Weapon FeatureSlider.jsx L60) */}
                 <div className="featured_title line-clamp-2">{product.name}</div>
 
                 {/* 2. Figure Foto Produk di Tengah */}
@@ -117,7 +126,7 @@ export default function FeaturedSlider() {
                   <img src={product.image} alt={product.name} />
                 </figure>
 
-                {/* 3. Harga Produk di Bawah */}
+                {/* 3. Harga Produk di Bawah (Exact Cricket-Weapon FeatureSlider.jsx L64) */}
                 <h2 className="products_price">
                   <span className="final_price">{formattedPrice}</span>
                   {formattedOldPrice && (

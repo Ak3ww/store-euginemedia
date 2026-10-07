@@ -6,13 +6,13 @@ import { Loader2 } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 
 const STORE_CATEGORIES = [
-  { name: "Router & MikroTik", slug: "router" },
-  { name: "Modem ONT & FTTH", slug: "ftth" },
-  { name: "Kabel & Dropcore", slug: "cables" },
-  { name: "Tools & Splicer", slug: "tools" },
-  { name: "CCTV & Security", slug: "cctv" },
-  { name: "Hardware & PC", slug: "hardware" },
-  { name: "Merchandise", slug: "merchandise" },
+  { name: "Cricket Bats", slug: "bats" },
+  { name: "Batting Pads", slug: "pads" },
+  { name: "Batting Gloves", slug: "gloves" },
+  { name: "Helmets", slug: "helmets" },
+  { name: "Kit Bags", slug: "bags" },
+  { name: "Cricket Shoes", slug: "shoes" },
+  { name: "Balls & Gear", slug: "balls" },
 ];
 
 export default function ProductsPage() {
@@ -41,7 +41,7 @@ function ProductsContent() {
   // Filter States (Exact Cricket-Weapon Products.jsx)
   const [selectedCategory, setSelectedCategory] = useState(categoryParam);
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(15000000);
+  const [maxPrice, setMaxPrice] = useState(10000000);
   const [selectedRating, setSelectedRating] = useState("all");
 
   useEffect(() => {
@@ -76,8 +76,13 @@ function ProductsContent() {
     return () => clearTimeout(timer);
   }, [selectedCategory, queryParam]);
 
-  // Client-side Price & Rating Filter
+  // Client-side Price, Category & Rating Filter
   const filteredProducts = products.filter((p) => {
+    const matchCategory =
+      !selectedCategory || selectedCategory === "all"
+        ? true
+        : (p.category?.slug === selectedCategory || p.category === selectedCategory);
+
     const matchPrice = p.price >= minPrice && p.price <= maxPrice;
     const matchRating =
       selectedRating === "all"
@@ -87,7 +92,7 @@ function ProductsContent() {
         : selectedRating === "3"
         ? (p.rating || 5) >= 3
         : true;
-    return matchPrice && matchRating;
+    return matchCategory && matchPrice && matchRating;
   });
 
   return (
@@ -114,7 +119,7 @@ function ProductsContent() {
               <input
                 type="number"
                 value={maxPrice}
-                onChange={(e) => setMaxPrice(Number(e.target.value) || 15000000)}
+                onChange={(e) => setMaxPrice(Number(e.target.value) || 10000000)}
                 className="w-full h-9 px-2 text-xs border border-neutral-300 rounded-[3px] font-['Roboto']"
                 placeholder="Max"
               />
@@ -207,7 +212,7 @@ function ProductsContent() {
             onClick={() => {
               setSelectedCategory("");
               setMinPrice(0);
-              setMaxPrice(15000000);
+              setMaxPrice(10000000);
               setSelectedRating("all");
             }}
             className="w-full h-9 bg-neutral-100 hover:bg-[#ed1c24] hover:text-white text-[#414141] text-xs font-bold uppercase rounded-[3px] transition-colors font-['Archivo'] cursor-pointer"
@@ -235,7 +240,7 @@ function ProductsContent() {
                 onClick={() => {
                   setSelectedCategory("");
                   setMinPrice(0);
-                  setMaxPrice(15000000);
+                  setMaxPrice(10000000);
                   setSelectedRating("all");
                 }}
                 className="mt-4 px-6 py-2 bg-black text-white text-xs font-bold uppercase tracking-wider rounded-[3px] hover:bg-[#ed1c24] transition-colors"

@@ -1,0 +1,335 @@
+/* ProductDetails CSS 1:1 replica of Cricket-Weapon ProductDetails.css */
+.prodcutDetialsContainer {
+  overflow: hidden !important;
+  width: 100%;
+  background-color: #f1f1f1;
+  padding-bottom: 3rem;
+}
+
+.product_container {
+  margin-top: 2rem;
+  width: 98vw;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden !important;
+  font-family: "Roboto", sans-serif;
+  background: transparent;
+}
+
+.prod_details_wrapper {
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+  width: 100%;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.prod_details_left_col {
+  color: #403e3e;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  padding: 1.5rem;
+  display: flex;
+  width: 50%;
+  min-height: 560px;
+  gap: 16px;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.prod_details_tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  height: 480px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 5.5rem;
+  padding-right: 0.5rem;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.prod_details_tabs::-webkit-scrollbar {
+  width: 5px;
+}
+
+.prod_details_tabs::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 2px;
+}
+
+.prod_details_tabs .tabs_item {
+  border: 2px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  height: 3.5rem;
+  width: 4rem;
+  padding: 0.2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.prod_details_tabs .tabs_item.active {
+  border-color: #e30605 !important;
+}
+
+.prod_details_tabs .tabs_item img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+.prod_details_img {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.prod_details_img img {
+  max-height: 460px;
+  width: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.prod_details_right_col_001 {
+  width: 48%;
+  padding: 2rem 2.5rem;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.prod_details_title {
+  font-family: "Archivo", sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #111;
+  line-height: 1.25;
+  margin-bottom: 0.5rem;
+}
+
+.prod_details_info {
+  font-weight: 600;
+  color: #524f4ff0;
+  font-size: 13px;
+  margin-bottom: 0.8rem;
+}
+
+.prod_details_ratings {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 13px;
+  margin-bottom: 1.2rem;
+}
+
+.prod_details_price {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  color: #2d2c2c;
+  margin-bottom: 1rem;
+}
+
+.price_box .price {
+  font-family: "Archivo", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #000;
+}
+
+.price_box .del_price {
+  font-size: 1.1rem;
+  color: #626262;
+  font-weight: 500;
+}
+
+.price_box .saved_price {
+  color: #008000;
+  font-weight: 600;
+  font-size: 13px;
+  margin-top: 0.2rem;
+}
+
+.price_box .tax_txt {
+  color: #777;
+  font-size: 0.8rem;
+}
+
+.badge .instock {
+  border: 1px solid #008000;
+  background-color: #00800020;
+  color: #008000;
+  font-size: 12px;
+  padding: 4px 8px;
+  font-weight: 700;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge .outofstock {
+  background-color: #ff000020;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+  font-size: 12px;
+  padding: 4px 8px;
+  font-weight: 700;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.seprator2 {
+  background-color: #e0e0e0;
+  width: 100%;
+  height: 1px;
+  margin: 1.2rem 0;
+}
+
+.productDescription {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.productDiscriptiopn_text h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #292929;
+  margin-bottom: 0.3rem;
+}
+
+.productDiscriptiopn_text p {
+  color: #555;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.prod_details_offers h4 {
+  font-weight: 700;
+  font-size: 14px;
+  color: #292929;
+  margin-bottom: 0.4rem;
+}
+
+.prod_details_offers ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.prod_details_offers ul li {
+  color: rgb(37, 37, 37);
+  font-size: 12px;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #252525;
+  background: transparent;
+}
+
+.deliveryText {
+  margin-top: 0.5rem;
+  font-size: 13px;
+  color: #292929;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.prod_details_additem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.prod_details_additem h5 {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.additem {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.additem_decrease,
+.additem_increase {
+  width: 32px;
+  height: 32px;
+  background-color: #161616;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.additem_decrease:hover,
+.additem_increase:hover {
+  background-color: #333;
+}
+
+.additem_input {
+  width: 40px;
+  height: 32px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  outline: none;
+}
+
+.prod_details_addtocart_btn {
+  flex: 1;
+  min-height: 46px;
+  background: rgb(22, 22, 22);
+  color: white;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: "Archivo", sans-serif;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.prod_details_addtocart_btn:hover {
+  background: #ed1c24 !important;
+  transform: scale(1.03);
+}
+
+@media (max-width: 999px) {
+  .prod_details_wrapper {
+    flex-direction: column;
+  }
+  .prod_details_left_col,
+  .prod_details_right_col_001 {
+    width: 100%;
+    margin: 0;
+  }
+}
