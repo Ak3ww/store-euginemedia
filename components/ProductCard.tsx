@@ -25,34 +25,39 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore((state) => state.addItem);
 
-  const displayImage = product.imageUrl || product.image || "/images/placeholder-product.png";
-  const productHref = `/products/${product.slug || product.id}`;
-  const ratingValue = product.rating || 5;
-  const reviewCount = product.reviews || 12;
+  const productName = product?.name || "Perangkat Jaringan";
+  const productPrice = typeof product?.price === "number" ? product.price : (Number(product?.price) || 0);
+  const originalPrice = product?.originalPrice ? Number(product.originalPrice) : null;
+  const displayImage = product?.imageUrl || product?.image || "/images/placeholder-product.png";
+  const productHref = `/products/${product?.slug || product?.id || ""}`;
+  const ratingValue = Number(product?.rating) || 5;
+  const reviewCount = Number(product?.reviews) || 12;
 
   // Exact truncated title & description from Cricket-Weapon ProductCard.jsx
+  const nameParts = productName.split(" ").filter(Boolean);
   const nameTruncated =
-    product.name.split(" ").slice(0, 4).join(" ") + (product.name.split(" ").length > 4 ? "..." : "");
+    nameParts.slice(0, 4).join(" ") + (nameParts.length > 4 ? "..." : "");
 
-  const descriptionTruncated = product.description
-    ? product.description.split(" ").slice(0, 7).join(" ") + "..."
-    : "Perangkat original bergaransi resmi PT Eugine Media Group...";
+  const descStr = product?.description || "Perangkat original bergaransi resmi PT Eugine Media Group...";
+  const descParts = descStr.split(" ").filter(Boolean);
+  const descriptionTruncated =
+    descParts.slice(0, 7).join(" ") + (descParts.length > 7 ? "..." : "");
 
-  const discountPriceFormatted = `Rp ${product.price.toLocaleString("id-ID")}`;
+  const discountPriceFormatted = `Rp ${productPrice.toLocaleString("id-ID")}`;
   const oldPriceFormatted =
-    product.originalPrice && product.originalPrice > product.price
-      ? `Rp ${product.originalPrice.toLocaleString("id-ID")}`
+    originalPrice && originalPrice > productPrice
+      ? `Rp ${originalPrice.toLocaleString("id-ID")}`
       : null;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addItem({
-      id: product.id,
-      name: product.name,
-      price: product.price,
+      id: product?.id || "",
+      name: productName,
+      price: productPrice,
       image: displayImage,
-      weight: product.weight || 500,
+      weight: Number(product?.weight) || 500,
       quantity: 1,
     });
   };

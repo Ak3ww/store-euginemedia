@@ -132,16 +132,16 @@ export default function ProductDetailPage({ product }: ProductDetailPageProps) {
             <div className="prod_details_price">
               <div className="price_box">
                 <h2 className="price">
-                  Rp {product.price.toLocaleString("id-ID")}
+                  Rp {(Number(product.price) || 0).toLocaleString("id-ID")}
                   {oldPrice && (
                     <small className="del_price ml-2">
-                      <del>Rp {oldPrice.toLocaleString("id-ID")}</del>
+                      <del>Rp {(Number(oldPrice) || 0).toLocaleString("id-ID")}</del>
                     </small>
                   )}
                 </h2>
                 {savedPrice && savedDiscount && (
                   <p className="saved_price">
-                    You save: Rp {savedPrice.toLocaleString("id-ID")} ({savedDiscount}%)
+                    You save: Rp {(Number(savedPrice) || 0).toLocaleString("id-ID")} ({savedDiscount}%)
                   </p>
                 )}
                 <span className="tax_txt">(Inclusive of all taxes)</span>

@@ -63,13 +63,29 @@ const DEFAULT_FEATURED: ProductItem[] = [
 ];
 
 export default function FeaturedSlider({ products }: { products?: ProductItem[] }) {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const displayProducts = products && products.length > 0 ? products : DEFAULT_FEATURED;
+
+  if (!mounted) {
+    return (
+      <div className="w-full py-8 flex justify-center items-center min-h-[380px]">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#ed1c24] border-t-transparent" />
+      </div>
+    );
+  }
+
+  const canLoop = displayProducts.length >= 4;
 
   return (
     <div className="w-full py-4">
       <Swiper
         modules={[EffectCoverflow, Pagination, A11y, Autoplay]}
-        loop={true}
+        loop={canLoop}
         speed={700}
         grabCursor={true}
         centeredSlides={true}
@@ -100,9 +116,11 @@ export default function FeaturedSlider({ products }: { products?: ProductItem[] 
         className="featured_swiper"
       >
         {displayProducts.map((product) => {
-          const formattedPrice = `Rp ${product.price.toLocaleString("id-ID")}`;
-          const formattedOldPrice = product.originalPrice
-            ? `Rp ${product.originalPrice.toLocaleString("id-ID")}`
+          const priceNum = Number(product.price) || 0;
+          const formattedPrice = `Rp ${priceNum.toLocaleString("id-ID")}`;
+          const oldPriceNum = product.originalPrice ? Number(product.originalPrice) : null;
+          const formattedOldPrice = oldPriceNum
+            ? `Rp ${oldPriceNum.toLocaleString("id-ID")}`
             : null;
 
           return (
@@ -119,11 +137,11 @@ export default function FeaturedSlider({ products }: { products?: ProductItem[] 
                 }}
               >
                 {/* 1. Judul Produk DI ATAS Foto (Exact Cricket-Weapon FeatureSlider.jsx L60) */}
-                <div className="featured_title line-clamp-2">{product.name}</div>
+                <div className="featured_title line-clamp-2">{product.name || "Produk Pilihan"}</div>
 
                 {/* 2. Figure Foto Produk di Tengah */}
                 <figure className="featured_img">
-                  <img src={product.image} alt={product.name} />
+                  <img src={product.image || "/images/placeholder-product.png"} alt={product.name || "Produk"} />
                 </figure>
 
                 {/* 3. Harga Produk di Bawah (Exact Cricket-Weapon FeatureSlider.jsx L64) */}

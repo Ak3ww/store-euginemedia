@@ -22,12 +22,14 @@ export default function Header() {
   const itemCount = useCartStore((state) => state.getItemCount());
   const { user, checkSession } = useAuthStore();
 
+  const [mounted, setMounted] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdown, setServicesDropdown] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     checkSession();
   }, [checkSession]);
 
@@ -67,7 +69,7 @@ export default function Header() {
               >
                 <User className="h-3 w-3 text-[#ed1c24]" />
                 <span className="font-semibold truncate max-w-[120px]">
-                  {user ? (user.name || "Akun Saya") : "My Account"}
+                  {mounted && user ? (user.name || "Akun Saya") : "My Account"}
                 </span>
               </Link>
             </div>
@@ -188,7 +190,7 @@ export default function Header() {
             {/* Cart Icon with Red Counter Badge */}
             <Link href="/cart" className="relative p-1.5 hover:text-[#E30605] transition-colors">
               <ShoppingCart className="h-5 w-5" />
-              {itemCount > 0 && (
+              {mounted && itemCount > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#ed1c24] px-1 text-[10px] font-bold text-white">
                   {itemCount}
                 </span>

@@ -31,9 +31,9 @@ export default async function HomePage() {
   // Format featured products for FeaturedSlider
   const featuredList = products.map((p) => ({
     id: p.slug || p.id,
-    name: p.name,
-    price: p.price,
-    originalPrice: p.originalPrice || undefined,
+    name: p.name || "",
+    price: Number(p.price) || 0,
+    originalPrice: p.originalPrice ? Number(p.originalPrice) : undefined,
     image: p.imageUrl || p.image || "/images/placeholder-product.png",
   }));
 
