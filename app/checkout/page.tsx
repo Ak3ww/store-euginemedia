@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import CheckoutSteps from "@/components/cart/CheckoutSteps";
+import { BrandLogo } from "@/components/ui/brand-logo";
 
 interface CourierOption {
   courier: string;
@@ -434,17 +435,7 @@ export default function CheckoutPage() {
                       }`}>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                          <img
-                            src={
-                              opt.courier.toLowerCase().includes("jne")
-                                ? "/images/couriers/jne.svg"
-                                : opt.courier.toLowerCase().includes("j&t")
-                                ? "/images/couriers/jnt.svg"
-                                : "/images/couriers/sicepat.svg"
-                            }
-                            alt={opt.courier}
-                            className="h-5 w-auto object-contain"
-                          />
+                          <BrandLogo name={opt.courier} category="courier" size="sm" />
                           <span className="text-xs font-black uppercase tracking-wider text-neutral-900 font-['Archivo']">
                             {opt.courier}
                           </span>
@@ -483,7 +474,7 @@ export default function CheckoutPage() {
                 }`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <img src="/images/banks/qris.svg" alt="QRIS" className="h-5 w-auto object-contain" />
+                    <BrandLogo name="qris" size="sm" />
                     <span className="text-sm font-bold uppercase font-['Archivo'] text-neutral-900">
                       QRIS Real-Time
                     </span>
@@ -492,10 +483,11 @@ export default function CheckoutPage() {
                 </div>
                 <div className="mt-2 flex flex-wrap items-center gap-1.5">
                   <span className="text-[10px] text-neutral-500">Mendukung:</span>
-                  <img src="/images/banks/bca.svg" alt="BCA" className="h-3 w-auto object-contain" />
-                  <img src="/images/banks/mandiri.svg" alt="Mandiri" className="h-3 w-auto object-contain" />
-                  <img src="/images/banks/gopay.svg" alt="GoPay" className="h-3 w-auto object-contain" />
-                  <img src="/images/banks/shopeepay.svg" alt="ShopeePay" className="h-3 w-auto object-contain" />
+                  <BrandLogo name="bca" size="xs" />
+                  <BrandLogo name="mandiri" size="xs" />
+                  <BrandLogo name="gopay" size="xs" />
+                  <BrandLogo name="shopeepay" size="xs" />
+                  <BrandLogo name="dana" size="xs" />
                 </div>
               </div>
 
@@ -516,10 +508,11 @@ export default function CheckoutPage() {
                   </div>
                   {paymentMethod === "BANK_TRANSFER" && <CheckCircle2 className="h-4 w-4 text-[#ed1c24]" />}
                 </div>
-                <div className="mt-2 flex items-center space-x-2">
-                  <img src="/images/banks/bca.svg" alt="BCA" className="h-3.5 w-auto object-contain" />
-                  <img src="/images/banks/mandiri.svg" alt="Mandiri" className="h-3.5 w-auto object-contain" />
-                  <span className="text-[11px] text-neutral-500 font-semibold">Rekening Resmi PT EMG</span>
+                <div className="mt-2 flex items-center space-x-1.5">
+                  <BrandLogo name="bca" size="xs" />
+                  <BrandLogo name="mandiri" size="xs" />
+                  <BrandLogo name="bri" size="xs" />
+                  <span className="text-[11px] text-neutral-500 font-semibold ml-1">Rekening Resmi PT EMG</span>
                 </div>
               </div>
             </div>

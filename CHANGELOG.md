@@ -4,6 +4,35 @@ Semua perubahan dan rilis arsitektur EugineStore didokumentasikan di sini mengik
 
 ---
 
+## [3.1.0] - 2026-10-09
+
+### 📦 Indonesian Logistics & Brand Marks Overhaul via idn-finlogos
+
+- **Latar Belakang (Issue / Context)**:
+  - Pilihan ekspedisi kurir di checkout sebelumnya hanya memiliki 3 file hardcoded (JNE, J&T, SiCepat), di mana opsi kurir lainnya (AnterAja, Pos Indonesia, Lion Parcel, SPX, Wahana, TIKI, dll.) salah di-fallback ke logo SiCepat.
+  - Halaman produk membutuhkan penayangan visual kurir yang didukung dan tombol marketplace terstandar dengan logo vektor resolusi tinggi.
+
+- **Solusi Arsitektural & Perubahan Teknis**:
+  - **Aset Kurasi SVGO Lokal**: Menyalin ~20 logo kurir ekspedisi ke `/public/images/couriers/`, ~7 marketplace ke `/public/images/marketplaces/`, dan ~30 logo bank & e-wallet ke `/public/images/finlogos/` dari library resmi `idn-finlogos` (v2.5.1).
+  - **Modul Resolver (`lib/finlogos.ts`)**: Pencocokan cerdas alias nama kurir Indonesia (`j&t`, `jnt`, `sicepat`, `pos indonesia`, `anteraja`, `spx express`, dll.) dan marketplace resmi (`shopee`, `tokopedia`, `tiktok shop`, `lazada`, `blibli`, `bukalapak`).
+  - **Universal Component `<BrandLogo />` (`components/ui/brand-logo.tsx`)**: Komponen terpadu dengan fallback graceful ke icon Lucide (`Truck`, `ShoppingBag`, `CreditCard`) dan fallback CDN jika query di luar kurasi lokal.
+  - **Pembaruan Halaman Checkout (`app/checkout/page.tsx`)**:
+    - Seluruh opsi kurir ekspedisi kini menampilkan logo resmi masing-masing (`<BrandLogo name={opt.courier} category="courier" size="sm" />`).
+    - Logo metode pembayaran QRIS, e-wallet, dan rekening bank resmi kini terhubung ke aset `idn-finlogos`.
+  - **Pembaruan Detail Produk (`app/products/[id]/product-detail.tsx`)**:
+    - Menambahkan badge bar resmi ekspedisi pengiriman didukung (JNE, J&T Express, SiCepat, AnterAja, Pos Indonesia).
+    - Tombol "Juga Tersedia di Marketplace Resmi" (Shopee Official & Tokopedia).
+
+- **Daftar File yang Ditambahkan / Dimodifikasi (`Files`)**:
+  - Added: `lib/finlogos.ts`
+  - Added: `components/ui/brand-logo.tsx`
+  - Added: `public/images/couriers/*` (~20 SVG files)
+  - Added: `public/images/marketplaces/*` (~7 SVG files)
+  - Added: `public/images/finlogos/*` (~30 SVG files)
+  - Modified: `app/checkout/page.tsx`
+  - Modified: `app/products/[id]/product-detail.tsx`
+  - Modified: `CHANGELOG.md`
+
 ## [3.0.0] - 2026-10-06
 
 ### 🚀 Major Architecture Release: Next.js 14 BundUI Full Stack
