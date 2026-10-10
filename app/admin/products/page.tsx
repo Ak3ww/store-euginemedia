@@ -14,6 +14,7 @@ import {
   Loader2,
   AlertCircle,
   X,
+  Upload,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,6 +46,27 @@ export default function AdminProductsPage() {
   const [description, setDescription] = useState("");
   const [shopeeUrl, setShopeeUrl] = useState("");
   const [tokopediaUrl, setTokopediaUrl] = useState("");
+
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleImageUpload = async (file: File) => {
+    setIsUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        setImageUrl(data.url);
+      } else {
+        setErrorMsg(data.error || "Gagal mengupload gambar");
+      }
+    } catch {
+      setErrorMsg("Terjadi kesalahan saat mengupload gambar");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const loadData = async () => {
     setIsLoading(true);
@@ -413,14 +435,77 @@ export default function AdminProductsPage() {
                 />
               </div>
 
+              {/* Image Upload Section */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">URL Gambar Produk</label>
-                <Input
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="https://... atau /uploads/..."
-                  className="h-10 text-xs border-slate-200 rounded-lg"
-                />
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Gambar Produk</label>
+                <div
+                  className={`relative border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-colors ${
+                    isUploading
+                      ? "border-blue-300 bg-blue-50"
+                      : imageUrl
+                      ? "border-emerald-300 bg-emerald-50"
+                      : "border-slate-300 bg-slate-50 hover:border-[#ed1c24] hover:bg-red-50"
+                  }`}
+                  onClick={() => document.getElementById("product-image-input")?.click()}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const droppedFile = e.dataTransfer.files[0];
+                    if (droppedFile) handleImageUpload(droppedFile);
+                  }}
+                >
+                  <input
+                    id="product-image-input"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) handleImageUpload(f);
+                    }}
+                  />
+                  {isUploading ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+                      <span className="text-xs text-blue-600 font-semibold">Mengupload gambar...</span>
+                    </div>
+                  ) : imageUrl ? (
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={imageUrl}
+                        alt="Preview produk"
+                        className="w-16 h-16 object-contain rounded-lg border border-slate-200 bg-white p-1"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                      />
+                      <div className="text-left">
+                        <p className="text-xs font-semibold text-emerald-700">Gambar terpasang</p>
+                        <p className="text-[11px] text-slate-500 break-all max-w-xs">{imageUrl}</p>
+                        <button
+                          type="button"
+                          className="text-[11px] text-[#ed1c24] hover:underline mt-0.5"
+                          onClick={(e) => { e.stopPropagation(); setImageUrl(""); }}
+                        >
+                          Ganti gambar
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-1.5 py-2">
+                      <Upload className="w-6 h-6 text-slate-400" />
+                      <p className="text-xs font-semibold text-slate-600">Klik atau seret gambar produk di sini</p>
+                      <p className="text-[11px] text-slate-400">JPG, PNG, WebP — Maks. 5MB</p>
+                    </div>
+                  )}
+                </div>
+                <div className="mt-2">
+                  <label className="block text-[11px] text-slate-500 mb-1">Atau masukkan URL gambar langsung:</label>
+                  <Input
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="https://... atau /uploads/products/..."
+                    className="h-9 text-xs border-slate-200 rounded-lg"
+                  />
+                </div>
               </div>
             </div>
 

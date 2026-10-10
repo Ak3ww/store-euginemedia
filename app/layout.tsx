@@ -17,9 +17,35 @@ const roboto = Roboto({
   variable: "--font-roboto",
 });
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://store.euginemediagroup.com";
+
 export const metadata: Metadata = {
-  title: "EugineStore — Toko Resmi Perangkat Jaringan & Merchandise",
-  description: "Platform e-commerce resmi di bawah naungan Eugine Media Group. Belanja perangkat jaringan, FTTH, dan merchandise berkualitas.",
+  metadataBase: new URL(APP_URL),
+  title: {
+    default: "EugineStore — Toko Resmi Perangkat Jaringan & Merchandise",
+    template: "%s | EugineStore",
+  },
+  description: "Belanja perangkat jaringan FTTH, router MikroTik, ONT XPON, kabel fiber, CCTV, dan merchandise resmi Eugine Media Group. Gratis ongkir se-Jabodetabek.",
+  keywords: ["perangkat jaringan", "router mikrotik", "ont xpon", "fiber optik", "FTTH", "Eugine Media Group", "EugineStore", "CCTV", "kabel dropcore"],
+  authors: [{ name: "PT Eugine Media Group", url: "https://euginemediagroup.com" }],
+  creator: "PT Eugine Media Group",
+  openGraph: {
+    type: "website",
+    locale: "id_ID",
+    url: APP_URL,
+    siteName: "EugineStore",
+    title: "EugineStore — Toko Resmi Perangkat Jaringan & Merchandise",
+    description: "Belanja perangkat jaringan, router, ONT fiber, CCTV, dan merchandise resmi Eugine Media Group. Pengiriman ke seluruh Indonesia.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "EugineStore — Toko Resmi Perangkat Jaringan",
+    description: "Perangkat jaringan FTTH & ISP resmi dari Eugine Media Group.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

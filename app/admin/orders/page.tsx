@@ -17,6 +17,7 @@ import {
   MessageCircle,
   Printer,
   FileText,
+  Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -100,6 +101,44 @@ export default function AdminOrdersPage() {
     return status === "PAID" || status === "PROCESSING" || status === "SHIPPED" || status === "COMPLETED";
   };
 
+  const exportToCSV = () => {
+    if (orders.length === 0) {
+      alert("Tidak ada pesanan untuk diekspor.");
+      return;
+    }
+    const headers = ["No. Pesanan","Tanggal","Nama Pembeli","Nomor WA","Alamat Pengiriman","Kota","Provinsi","Kode Pos","Kurir","Layanan","No. Resi","Status","Metode Bayar","Subtotal (Rp)","Ongkir (Rp)","Total (Rp)"];
+    const rows = orders.map((ord: any) => [
+      ord.orderNumber,
+      new Date(ord.createdAt).toLocaleDateString("id-ID"),
+      `"${(ord.customerName || "").replace(/"/g, '""')}"`,
+      ord.customerPhone,
+      `"${(ord.shippingAddress || "").replace(/"/g, '""')}"`,
+      ord.city || "",
+      ord.province || "",
+      ord.postalCode || "",
+      ord.courier || "",
+      ord.courierService || "",
+      ord.trackingNumber || "-",
+      ord.status,
+      ord.paymentMethod,
+      ord.subtotalAmount,
+      ord.shippingCost,
+      ord.totalAmount,
+    ]);
+    const csvContent = [headers.join(","), ...rows.map((row: any[]) => row.join(","))].join("\n");
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`;
+    link.href = url;
+    link.download = `EugineStore-Orders-${statusFilter}-${dateStr}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-6">
       {/* Top Header */}
@@ -118,6 +157,14 @@ export default function AdminOrdersPage() {
             Kelola pesanan masuk, verifikasi pembayaran, input resi pengiriman, dan cetak invoice admin
           </p>
         </div>
+        <Button
+          onClick={exportToCSV}
+          variant="outline"
+          className="text-xs font-semibold border-slate-300 hover:border-emerald-500 hover:text-emerald-700 hover:bg-emerald-50 gap-1.5"
+        >
+          <Download className="w-3.5 h-3.5" />
+          Export CSV
+        </Button>
       </div>
 
       {/* Filters Bar */}
